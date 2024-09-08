@@ -17,13 +17,13 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Watch, Category} from '../models';
-import {WatchRepository, CategoryRepository} from '../repositories';
+import {Watch} from '../models';
+import {WatchRepository} from '../repositories';
 
 export class WatchController {
   constructor(
-    @repository(CategoryRepository) protected categoryRepository: CategoryRepository,
-    @repository(WatchRepository) protected watchRepository: WatchRepository
+    @repository(WatchRepository)
+    public watchRepository : WatchRepository,
   ) {}
 
   @post('/watches')
@@ -145,44 +145,8 @@ export class WatchController {
     description: 'Watch DELETE success',
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
-    await this.watchRepository.deleteById(id);
-  }
-
-  @get('/categories/{id}/watches', {
-    responses: {
-      '200': {
-        description: 'Array of Category has many Watch',
-        content: {
-          'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Watch)},
-          },
-        },
-      },
-    },
-  })
-  async getWatchesByCategory(
-    @param.path.number('id') id: number,
-    @param.query.object('filter') filter?: Filter<Watch>,
-  ): Promise<Watch[]> {
-    return this.categoryRepository.getWatches(id).find(filter);
-  }
-
-  @get('/watches/{id}/categories', {
-    responses: {
-      '200': {
-        description: 'Array of Watch has many Category',
-        content: {
-          'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Category)},
-          },
-        },
-      },
-    },
-  })
-  async getWatchCategories(
-    @param.path.number('id') id: number,
-    @param.query.object('filter') filter?: Filter<Category>,
-  ): Promise<Category[]> {
-    return this.watchRepository.getCategories(id).find(filter);
+    let watch : Watch = await this.watchRepository.findById(id);
+    watch.isDeleted = true;
+    await this.watchRepository.updateById(id,watch)
   }
 }

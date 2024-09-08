@@ -1,8 +1,9 @@
 import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, HasManyRepositoryFactory} from '@loopback/repository';
+import {DefaultCrudRepository, repository, HasManyRepositoryFactory, juggler} from '@loopback/repository';
 import {WatchaDoingDbDataSource} from '../datasources';
 import {Watch, WatchRelations, Category} from '../models';
-import {CategoryRepository} from './category.repository';
+import {CategoryRepository, } from './category.repository';
+
 
 export class WatchRepository extends DefaultCrudRepository<
   Watch,
@@ -12,11 +13,15 @@ export class WatchRepository extends DefaultCrudRepository<
 
   public readonly getCategories: HasManyRepositoryFactory<Category, typeof Watch.prototype.id>;
 
+  public readonly categories: HasManyRepositoryFactory<Category, typeof Watch.prototype.id>;
+
   constructor(
     @inject('datasources.WatchaDoingDB') dataSource: WatchaDoingDbDataSource, @repository.getter('CategoryRepository') protected categoryRepositoryGetter: Getter<CategoryRepository>,
   ) {
     super(Watch, dataSource);
-    this.getCategories = this.createHasManyRepositoryFactoryFor('getCategories', categoryRepositoryGetter,);
-    this.registerInclusionResolver('getCategories', this.getCategories.inclusionResolver);
+    this.categories = this.createHasManyRepositoryFactoryFor('categories', categoryRepositoryGetter,);
+    this.registerInclusionResolver('categories', this.categories.inclusionResolver);
+    this.getCategories = this.createHasManyRepositoryFactoryFor('categories', categoryRepositoryGetter,);
+    this.registerInclusionResolver('categories', this.getCategories.inclusionResolver);
   }
 }

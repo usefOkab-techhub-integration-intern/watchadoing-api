@@ -1,5 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Watch, WatchWithRelations} from './watch.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 
 @model({settings: {strict: false}})
 export class Category extends Entity {
@@ -9,6 +8,11 @@ export class Category extends Entity {
     generated: true,
   })
   id?: number;
+
+  @property({
+    type: 'string',
+  })
+  name?: string;
 
   @property({
     type: 'string',
@@ -27,18 +31,6 @@ export class Category extends Entity {
   })
   updatedAt?: string;
 
-  @property({
-    type: 'number',
-  })
-  watchId?: number;
-
-  @hasMany(() => Watch)
-  getWatches: Watch[];
-  // Define well-known properties here
-
-  // Indexer property to allow additional data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
 
   constructor(data?: Partial<Category>) {
     super(data);
@@ -46,7 +38,7 @@ export class Category extends Entity {
 }
 
 export interface CategoryRelations {
-  watches?: WatchWithRelations[];
+
 }
 
 export type CategoryWithRelations = Category & CategoryRelations;

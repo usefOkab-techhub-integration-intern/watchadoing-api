@@ -1,5 +1,5 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {Category, CategoryWithRelations} from './category.model';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import { Category } from './category.model';
 
 @model({settings: {strict: false}})
 export class Watch extends Entity {
@@ -36,7 +36,7 @@ export class Watch extends Entity {
 
   @property({
     type: 'number',
-    required: true,
+    default: 0,
   })
   quantity: number;
 
@@ -52,14 +52,11 @@ export class Watch extends Entity {
   })
   updatedAt?: string;
 
-  @hasMany(() => Category)
-  getCategories: Category[];
-
   @property({
-    type: 'number',
+    type: 'boolean',
+    default: false,
   })
-  categoryId?: number;
-  [prop: string]: any;
+  isDeleted: boolean;
 
   constructor(data?: Partial<Watch>) {
     super(data);
@@ -67,7 +64,7 @@ export class Watch extends Entity {
 }
 
 export interface WatchRelations {
-  categories?: CategoryWithRelations[];
+
 }
 
 export type WatchWithRelations = Watch & WatchRelations;
