@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+
+# Build files
+dist/
+
+# Logs
+*.log
+
+# Environment files
+.env
+
+# Docker-related
+docker-compose.override.yml
+
+# Temporary files
+*.tmp
+*.temp
+
+# Compiled output
+*.js
+*.map
+
+# System files
+.DS_Store
