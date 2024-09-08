@@ -8,7 +8,7 @@ require('dotenv').config();
 const config = {
   name: 'WatchaDoingDB',
   connector: 'mysql',
-  url: '',
+  url: process.env.DB_URL,
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT),
   user: process.env.DB_USER,

@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model Watch {
+  id        Int      @id @default(autoincrement())
+  model     String
+  origin    String
+  sn        String
+  price     Float
+  quantity  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  categories       Category[]         @relation("WatchCategoryMap")
+  WatchCategoryMap WatchCategoryMap[]
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+
+  watches          Watch[]            @relation("WatchCategoryMap")
+  WatchCategoryMap WatchCategoryMap[]
+}
+
+model WatchCategoryMap {
+  watchId    Int
+  categoryId Int
+
+  watch    Watch    @relation(fields: [watchId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@id([watchId, categoryId])
+}

@@ -1,27 +1,70 @@
-import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, HasManyRepositoryFactory, juggler} from '@loopback/repository';
-import {WatchaDoingDbDataSource} from '../datasources';
-import {Watch, WatchRelations, Category} from '../models';
-import {CategoryRepository, } from './category.repository';
+import {PrismaClient} from '@prisma/client';
 
+export class WatchRepository {
+  private prisma = new PrismaClient();
 
-export class WatchRepository extends DefaultCrudRepository<
-  Watch,
-  typeof Watch.prototype.id,
-  WatchRelations
-> {
+  async findAll() {
+    return this.prisma.watch.findMany({
+      where: {
+        isDeleted: false,
+      },
+      include: {
+        categories: true,
+      },
+    });
+  }
 
-  public readonly getCategories: HasManyRepositoryFactory<Category, typeof Watch.prototype.id>;
+  async findDeleted() {
+    return this.prisma.watch.findMany({
+      where: {
+        isDeleted: true,
+      },
+      include: {
+        categories: true,
+      },
+    });
+  }
 
-  public readonly categories: HasManyRepositoryFactory<Category, typeof Watch.prototype.id>;
+  async findById(id: number) {
+    return this.prisma.watch.findUnique({
+      where: {id},
+      include: {
+        categories: true,
+      },
+    });
+  }
 
-  constructor(
-    @inject('datasources.WatchaDoingDB') dataSource: WatchaDoingDbDataSource, @repository.getter('CategoryRepository') protected categoryRepositoryGetter: Getter<CategoryRepository>,
-  ) {
-    super(Watch, dataSource);
-    this.categories = this.createHasManyRepositoryFactoryFor('categories', categoryRepositoryGetter,);
-    this.registerInclusionResolver('categories', this.categories.inclusionResolver);
-    this.getCategories = this.createHasManyRepositoryFactoryFor('categories', categoryRepositoryGetter,);
-    this.registerInclusionResolver('categories', this.getCategories.inclusionResolver);
+  async create(data: any) {
+    return this.prisma.watch.create({
+      data: {
+        ...data,
+        categories: {
+          connect: data.categoryIds.map((categoryId: number) => ({
+            id: categoryId,
+          })),
+        },
+      },
+    });
+  }
+
+  async update(id: number, data: any) {
+    return this.prisma.watch.update({
+      where: {id},
+      data: {
+        ...data,
+        categories: {
+          set: data.categoryIds.map((categoryId: number) => ({
+            id: categoryId,
+          })),
+        },
+      },
+    });
+  }
+
+  async softDeleteById(id: number) {
+    return this.prisma.watch.update({
+      where: {id},
+      data: {isDeleted: true}, 
+    });
   }
 }
