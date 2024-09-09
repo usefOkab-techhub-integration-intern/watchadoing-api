@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 export class CategoryRepository {
   private prisma = new PrismaClient();
@@ -7,10 +7,7 @@ export class CategoryRepository {
     return this.prisma.category.findMany({
       where: {
         isDeleted: false,
-      },
-      include: {
-        watches: false, 
-      },
+      }
     });
   }
 
@@ -18,53 +15,44 @@ export class CategoryRepository {
     return this.prisma.category.findMany({
       where: {
         isDeleted: true,
-      },
-      include: {
-        watches: false, 
-      },
+      }
     });
   }
 
   async findById(id: number) {
     return this.prisma.category.findUnique({
-      where: {id},
-      include: {
-        watches: false,
-      },
+      where: { id }
     });
   }
 
-  async create(data: any) {
-    return this.prisma.category.create({
-      data: {
-        ...data,
-        watches: {
-          connect: data.watchIds.map((watchId: number) => ({
-            id: watchId,
-          })),
-        },
-      },
-    });
+  async bulkCreate(dataArray: any[]) {
+    const results = [];
+    for (const data of dataArray) {
+      const result = await this.prisma.category.create({
+        data: data,
+      });
+      results.push(result);
+    }
+    return results;
   }
 
-  async update(id: number, data: any) {
-    return this.prisma.category.update({
-      where: {id},
-      data: {
-        ...data,
-        watches: {
-          set: data.watchIds.map((watchId: number) => ({
-            id: watchId,
-          })),
-        },
-      },
-    });
+  async bulkUpdate(dataArray: any[]) {
+    const results = [];
+    for (const data of dataArray) {
+      const result = await this.prisma.category.create({
+        data: data,
+      });
+      results.push(result);
+    }
+    return results;
   }
 
-  async softDeleteById(id: number) {
-    return this.prisma.watch.update({
-      where: {id},
-      data: {isDeleted: true}, 
+  async bulkSoftDelete(ids: number[]) {
+    return this.prisma.category.updateMany({
+      where: {
+        id: { in: ids },
+      },
+      data: { isDeleted: true },
     });
   }
 }
