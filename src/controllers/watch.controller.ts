@@ -19,20 +19,6 @@ export class WatchController {
     public watchRepo : WatchRepository
   ) {}
 
-  @post('/watches')
-  @response(200, {
-    description: 'Watch model instance',
-    content: {'application/json': {schema: {'x-ts-type': Watch}}},
-  })
-  async create(
-    @requestBody({
-      content: {'application/json': {schema: {'x-ts-type': Watch}}},  
-    })
-    watchData: any,
-  ): Promise<any> {
-    return this.watchRepo.create(watchData);
-  }
-
   @get('/watches/{id}')
   @response(200, {
     description: 'Watch model instance',
@@ -60,26 +46,53 @@ export class WatchController {
     return this.watchRepo.findDeleted();
   }
 
-  @patch('/watches/{id}')
+
+  @post('/watches')
   @response(200, {
-    description: 'Watch model instance updated',
-    content: {'application/json': {schema: {'x-ts-type': Watch}}},
+    description: 'Array of Watch model instances created',
+    content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': Watch } } } },
   })
-  async update(
-    @param.path.number('id') id: number,
+  async bulkCreate(
     @requestBody({
-      content: {'application/json': {schema: {'x-ts-type': Watch}}},
+      content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': Watch } } } },
     })
-    watchData: any,
+    watches: Watch[],
   ): Promise<any> {
-    return this.watchRepo.updateById(id, watchData);
+    return this.watchRepo.bulkCreate(watches);
   }
 
-  @del('/watches/{id}')
-  @response(204, {
-    description: 'Watch DELETE success',
+  @patch('/watches')
+@response(200, {
+  description: 'Array of Watch model instances updated',
+  content: {
+    'application/json': {
+      schema: { type: 'array', items: { 'x-ts-type': Watch } },
+    },
+  },
+})
+async bulkUpdate(
+  @requestBody({
+    content: {
+      'application/json': {
+        schema: { type: 'array', items: { 'x-ts-type': Watch } },
+      },
+    },
   })
-  async deleteById(@param.path.number('id') id: number): Promise<void> {
-    await this.watchRepo.softDeleteById(id);
+  watches: any[],
+): Promise<any[]> {
+  return this.watchRepo.bulkUpdate(watches);
+}
+
+  @del('/watches')
+  @response(204, {
+    description: 'Bulk delete success',
+  })
+  async bulkDelete(
+    @requestBody({
+      content: { 'application/json': { schema: { type: 'array', items: { type: 'number' } } } },
+    })
+    ids: number[],
+  ): Promise<void> {
+    await this.watchRepo.bulkSoftDelete(ids);
   }
 }

@@ -1,4 +1,4 @@
-import {PrismaClient} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 export class WatchRepository {
   private prisma = new PrismaClient();
@@ -9,7 +9,7 @@ export class WatchRepository {
         isDeleted: false,
       },
       include: {
-        categories: true,
+        categories: true
       },
     });
   }
@@ -20,22 +20,41 @@ export class WatchRepository {
         isDeleted: true,
       },
       include: {
-        categories: true,
+        categories: true
       },
     });
   }
 
   async findById(id: number) {
     return this.prisma.watch.findUnique({
-      where: {id},
+      where: { id },
       include: {
-        categories: true,
+        categories: true
       },
     });
   }
 
-  async create(data: any) {
-    return this.prisma.watch.create({
+async bulkCreate(dataArray: any[]) {
+  const results = [];
+  for (const data of dataArray) {
+    const result = await this.prisma.watch.create({
+      data: {
+        ...data,
+        categories: {
+          connect: data.categories.map((categoryId: number) => ({ id: categoryId })),
+        },
+      },
+    });
+    results.push(result);
+  }
+  return results;
+}
+
+async bulkUpdate(dataArray: any[]) {
+  const results = [];
+  for (const data of dataArray) {
+    const result = await this.prisma.watch.update({
+      where: { id: data.id },
       data: {
         ...data,
         categories: {
@@ -45,26 +64,17 @@ export class WatchRepository {
         },
       },
     });
+    results.push(result);
   }
+  return results;
+}
 
-  async updateById(id: number, data: any) {
-    return this.prisma.watch.update({
-      where: {id},
-      data: {
-        ...data,
-        categories: {
-          connect: data.categories.map((categoryId: number) => ({
-            id: categoryId,
-          })),
-        },
+  async bulkSoftDelete(ids: number[]) {
+    return this.prisma.watch.updateMany({
+      where: {
+        id: { in: ids },
       },
-    });
-  }
-
-  async softDeleteById(id: number) {
-    return this.prisma.watch.update({
-      where: {id},
-      data: {isDeleted: true}, 
+      data: { isDeleted: true },
     });
   }
 }
