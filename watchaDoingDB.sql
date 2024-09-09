@@ -2,7 +2,6 @@
 
 USE WatchaDoingDB;
 
-
 CREATE TABLE Watch(
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	createdAt DATETIME NOT NULL,

@@ -15,31 +15,17 @@ model Watch {
   price     Float
   quantity  Int      @default(0)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
   isDeleted Boolean  @default(false)
-
-  categories       Category[]         @relation("WatchCategoryMap")
-  WatchCategoryMap WatchCategoryMap[]
+  categories       Category[]     
 }
 
 model Category {
   id          Int      @id @default(autoincrement())
-  name        String?
+  name        String
   description String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @default(now()) @updatedAt
   isDeleted Boolean  @default(false)
-
-  watches          Watch[]            @relation("WatchCategoryMap")
-  WatchCategoryMap WatchCategoryMap[]
-}
-
-model WatchCategoryMap {
-  watchId    Int
-  categoryId Int
-
-  watch    Watch    @relation(fields: [watchId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
-
-  @@id([watchId, categoryId])
+  watches          Watch[]           
 }

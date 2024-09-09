@@ -11,7 +11,7 @@ import {
   } from '@loopback/rest';
   import { CategoryRepository } from '../repositories';
   
-  export class WatchController {
+  export class CategoryController {
     constructor(
       @repository(CategoryRepository)
       public categoryRepo : CategoryRepository,

@@ -39,7 +39,7 @@ export class WatchRepository {
       data: {
         ...data,
         categories: {
-          connect: data.categoryIds.map((categoryId: number) => ({
+          connect: data.categories.map((categoryId: number) => ({
             id: categoryId,
           })),
         },
@@ -47,13 +47,13 @@ export class WatchRepository {
     });
   }
 
-  async update(id: number, data: any) {
+  async updateById(id: number, data: any) {
     return this.prisma.watch.update({
       where: {id},
       data: {
         ...data,
         categories: {
-          set: data.categoryIds.map((categoryId: number) => ({
+          connect: data.categories.map((categoryId: number) => ({
             id: categoryId,
           })),
         },

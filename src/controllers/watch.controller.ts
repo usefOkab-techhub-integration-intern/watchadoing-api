@@ -8,8 +8,10 @@ import {
   del,
   requestBody,
   response,
+  patch
 } from '@loopback/rest';
-import { WatchRepository, CategoryRepository } from '../repositories';
+import { WatchRepository } from '../repositories';
+import { Watch } from '../models/watch.model';
 
 export class WatchController {
   constructor(
@@ -20,24 +22,11 @@ export class WatchController {
   @post('/watches')
   @response(200, {
     description: 'Watch model instance',
-    content: {'application/json': {schema: {'x-ts-type': Object}}},
+    content: {'application/json': {schema: {'x-ts-type': Watch}}},
   })
   async create(
     @requestBody({
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              model: {type: 'string'},
-              origin: {type: 'string'},
-              sn: {type: 'string'},
-              price: {type: 'number'},
-              quantity: {type: 'number'},
-            },
-          },
-        },
-      },
+      content: {'application/json': {schema: {'x-ts-type': Watch}}},  
     })
     watchData: any,
   ): Promise<any> {
@@ -47,7 +36,7 @@ export class WatchController {
   @get('/watches/{id}')
   @response(200, {
     description: 'Watch model instance',
-    content: {'application/json': {schema: {'x-ts-type': Object}}},
+    content: {'application/json': {schema: {'x-ts-type': Watch}}},
   })
   async findById(@param.path.number('id') id: number): Promise<any> {
     return this.watchRepo.findById(id);
@@ -69,6 +58,21 @@ export class WatchController {
   })
   async getDeleted(): Promise<any> {
     return this.watchRepo.findDeleted();
+  }
+
+  @patch('/watches/{id}')
+  @response(200, {
+    description: 'Watch model instance updated',
+    content: {'application/json': {schema: {'x-ts-type': Watch}}},
+  })
+  async update(
+    @param.path.number('id') id: number,
+    @requestBody({
+      content: {'application/json': {schema: {'x-ts-type': Watch}}},
+    })
+    watchData: any,
+  ): Promise<any> {
+    return this.watchRepo.updateById(id, watchData);
   }
 
   @del('/watches/{id}')
