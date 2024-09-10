@@ -36,11 +36,13 @@ export interface WatchOrderNoOrderLinesI{
 }
 
 export class WatchOrderDTO {
+    
+    private customerDTO : CustomerDTO
+    private shipmentDTO : OrderShipmentDTO
+    private orderLineDTO : WatchOrderLineDTO
   
     constructor(
-        private customerDTO : CustomerDTO,
-        private shipmentDTO : OrderShipmentDTO,
-        private orderLineDTO : WatchOrderLineDTO
+
     ) {}
   
     mapArray(orders: any[]): WatchOrderI[] {

@@ -16,8 +16,9 @@ export interface CustomerNoOrderI{
 }
   
 export class CustomerDTO {
+    private orderDTO : WatchOrderDTO;
   
-    constructor(private orderDTO : WatchOrderDTO) {}
+    constructor() {}
   
     mapArray(customers: any[]): CustomerI[] {
         return customers.map(customer => this.map(customer));

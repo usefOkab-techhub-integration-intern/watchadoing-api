@@ -14,8 +14,9 @@ export interface WatchI{
 }
 
 export class WatchDTO {
+  private categoryDTO : CategoryDTO
 
-    constructor(private categoryDTO : CategoryDTO) {}
+    constructor() {}
 
     mapArray(watches: any[]): WatchI[] {
       return watches.map(watch => this.map(watch));
