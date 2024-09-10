@@ -7,21 +7,40 @@ export class CategoryRepository {
   private native = new CategoryNativeRepository(this.prisma);
   private dto = new CategoryDTO();
 
-  async findAll() {
+  async findAll(
+    page: number = 1,
+    pageSize: number = 10,
+    sortBy: string = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc'
+  ) {
     const categories = await this.prisma.category.findMany({
       where: {
         isDeleted: false,
-      }
+      },
+      skip: (page - 1) * pageSize,  
+      take: pageSize,
+      orderBy: {
+        [sortBy]: sortOrder, 
+      },
     });
-
     return this.dto.mapArray(categories);
   }
 
-  async findDeleted() {
+  async findDeleted(
+    page: number = 1,
+    pageSize: number = 10,
+    sortBy: string = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc'
+  ) {
     const categories = await this.prisma.category.findMany({
       where: {
         isDeleted: true,
-      }
+      },
+      skip: (page - 1) * pageSize,  
+      take: pageSize,
+      orderBy: {
+        [sortBy]: sortOrder, 
+      },
     });
 
     return this.dto.mapArray(categories);

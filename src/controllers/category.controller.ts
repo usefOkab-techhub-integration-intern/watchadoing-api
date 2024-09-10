@@ -30,20 +30,44 @@ export class CategoryController {
 
   @get('/categories')
   @response(200, {
-    description: 'Array of Category model instances',
-    content: {'application/json': {schema: {'x-ts-type': Array}}},
+    description: 'Array of Watch model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: { 'x-ts-type': CategoryCreation },
+        },
+      },
+    },
   })
-  async getAll(): Promise<any> {
-    return this.categoryRepo.findAll();
+  async getAll(
+  @param.query.number('page', { default: 1 }) page: number,
+  @param.query.number('pageSize', { default: 10 }) pageSize: number,
+  @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
+  @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
+  ): Promise<any>  {
+    return this.categoryRepo.findAll(page,pageSize,sortBy,sortOrder);
   }
 
   @get('/categories/deleted')
   @response(200, {
-    description: 'Array of Category model instances',
-    content: {'application/json': {schema: {'x-ts-type': Array}}},
+    description: 'Array of Watch model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: { 'x-ts-type': CategoryCreation },
+        },
+      },
+    },
   })
-  async getDeleted(): Promise<any> {
-    return this.categoryRepo.findDeleted();
+  async getDeleted(
+  @param.query.number('page', { default: 1 }) page: number,
+  @param.query.number('pageSize', { default: 10 }) pageSize: number,
+  @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
+  @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
+  ): Promise<any> {
+    return this.categoryRepo.findDeleted(page,pageSize,sortBy,sortOrder);
   }
 
 
@@ -57,7 +81,7 @@ export class CategoryController {
       content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': CategoryCreation } } } },
     })
     categories: CategoryCreation[],
-  ): Promise<any> {
+  ): Promise<any[]> {
     return this.categoryRepo.bulkCreate(categories);
   }
 

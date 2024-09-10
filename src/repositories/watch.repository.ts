@@ -7,7 +7,13 @@ export class WatchRepository {
   private categoryDTO = new CategoryDTO();
   private watchDTO = new WatchDTO(this.categoryDTO);
 
-  async findFiltered(filter: any) {
+  async findFiltered(
+    filter: any,
+    page: number = 1,
+    pageSize: number = 10,
+    sortBy: string = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc'
+  ) {
     const whereClause: any = { isDeleted: false };
   
     if (filter) {
@@ -42,6 +48,11 @@ export class WatchRepository {
           },
         },
       },
+      skip: (page - 1) * pageSize,  
+      take: pageSize,
+      orderBy: {
+        [sortBy]: sortOrder, 
+      },
     });
   
     return this.watchDTO.mapArray(watches);
@@ -51,9 +62,8 @@ export class WatchRepository {
       page: number = 1,
       pageSize: number = 10,
       sortBy: string = 'createdAt',
-      sortOrder: 'asc' | 'desc' = 'asc'
+      sortOrder: 'asc' | 'desc' = 'desc'
   ) {
-    const skips = (page - 1) * pageSize;
   
     const watches = await this.prisma.watch.findMany({
       where: {
@@ -66,7 +76,7 @@ export class WatchRepository {
           },
         },
       },
-      skip: skips,  
+      skip: (page - 1) * pageSize,  
       take: pageSize,
       orderBy: {
         [sortBy]: sortOrder, 
