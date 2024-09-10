@@ -3,35 +3,90 @@ import { PrismaClient } from '@prisma/client';
 export class WatchRepository {
   private prisma = new PrismaClient();
 
-  async findAll() {
-    return this.prisma.watch.findMany({
-      where: {
-        isDeleted: false,
-      },
+  async findFiltered(filter: any) {
+    const whereClause: any = { isDeleted: false };
+  
+    if (filter) {
+      if (filter.model) {
+        whereClause.model = { contains: filter.model};
+      }
+  
+      if (filter.origin) {
+        whereClause.origin = { contains: filter.origin};
+      }
+  
+      if (filter.sn) {
+        whereClause.sn = { contains: filter.sn};
+      }
+  
+      if (filter.category) {
+        whereClause.categories = { 
+          some: { 
+            id: filter.category, 
+            isDeleted: false 
+          } 
+        };
+      }
+    }
+  
+    const watches = await this.prisma.watch.findMany({
+      where: whereClause,
       include: {
-        categories: true
+        categories: {
+          where: {
+            isDeleted: false,
+          },
+        },
       },
+    });
+  
+    return watches.map(watch => {
+      const { isDeleted, ...rest } = watch;
+      return {
+        ...rest,
+        categories: watch.categories.map(category => {
+          const { isDeleted, ...categoryRest } = category; 
+          return categoryRest;
+        }),
+      };
     });
   }
 
   async findDeleted() {
-    return this.prisma.watch.findMany({
+    const watches = await this.prisma.watch.findMany({
       where: {
         isDeleted: true,
       },
       include: {
-        categories: true
+        categories: true,
       },
+    });
+    
+    return watches.map(watch => {
+      const { isDeleted, ...rest } = watch;
+      return {
+        ...rest,
+        categories: watch.categories.map(category => {
+          const { isDeleted, ...categoryRest } = category; 
+          return categoryRest;
+        }),
+      };
     });
   }
 
   async findById(id: number) {
-    return this.prisma.watch.findUnique({
+    const watch = await this.prisma.watch.findUnique({
       where: { id },
       include: {
         categories: true
       },
     });
+
+    watch?.categories.map(category => {
+        const { isDeleted, ...categoryRest } = category; 
+        return categoryRest;
+      });
+    return watch;
   }
 
 async bulkCreate(dataArray: any[]) {

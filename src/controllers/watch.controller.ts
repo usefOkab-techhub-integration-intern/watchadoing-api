@@ -31,10 +31,13 @@ export class WatchController {
   @get('/watches')
   @response(200, {
     description: 'Array of Watch model instances',
-    content: {'application/json': {schema: {'x-ts-type': Array}}},
+    content: { 'application/json': { schema: { 'x-ts-type': Array } } },
   })
-  async getAll(): Promise<any> {
-    return this.watchRepo.findAll();
+  async findFiltered(
+    @param.query.object('filter')
+    filter?: { model?: string; origin?: string; sn?: string; category?: number },
+  ): Promise<any> {
+    return this.watchRepo.findFiltered(filter)
   }
 
   @get('/watches/deleted')
