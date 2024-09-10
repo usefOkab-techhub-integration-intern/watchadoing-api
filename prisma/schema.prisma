@@ -18,6 +18,7 @@ model Watch {
   updatedAt     DateTime        @default(now()) @updatedAt
   isDeleted     Boolean         @default(false)
   categories    Category[]
+  orderLines    WatchOrderLine[]
 }
 
 model Category {
@@ -28,4 +29,43 @@ model Category {
   updatedAt     DateTime        @default(now()) @updatedAt
   isDeleted     Boolean         @default(false)
   watches       Watch[]
+}
+
+model Customer {
+  id            Int             @id @default(autoincrement())
+  name          String          
+  addedAt       DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
+  order         WatchOrder[]
+  isDeleted     Boolean         @default(false)
+}
+
+model OrderShipment {
+  id            Int             @id @default(autoincrement())
+  trackingNum   Int             
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
+  order         WatchOrder?
+}
+
+model WatchOrder {
+  id            Int             @id @default(autoincrement())
+  customer      Customer        @relation(fields: [customerId], references: [id])
+  customerId    Int             
+  shipment      OrderShipment   @relation(fields: [shipmentId], references: [id])
+  shipmentId    Int             @unique
+  orderLines    WatchOrderLine[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
+}
+
+model WatchOrderLine {
+  id            Int             @id @default(autoincrement())
+  quantity      Int             @default(0)
+  watch         Watch           @relation(fields: [watchId], references: [id])
+  watchId       Int       
+  order         WatchOrder      @relation(fields: [orderId], references: [id])
+  orderId       Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
 }
