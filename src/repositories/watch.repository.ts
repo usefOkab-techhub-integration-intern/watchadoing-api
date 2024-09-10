@@ -82,11 +82,13 @@ export class WatchRepository {
       },
     });
 
-    watch?.categories.map(category => {
+    return {
+      ...watch,
+      categories: watch?.categories.map(category => {
         const { isDeleted, ...categoryRest } = category; 
         return categoryRest;
-      });
-    return watch;
+      }),
+    };
   }
 
 async bulkCreate(dataArray: any[]) {

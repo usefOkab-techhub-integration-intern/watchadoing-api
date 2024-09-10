@@ -17,7 +17,7 @@ class CategoryQuery {
     static disconnectFromWatches(categoryIds: number[]): string {
         return `
           DELETE FROM _CategoryToWatch
-          WHERE categoryId IN (${categoryIds.join(',')});
+          WHERE A IN (${categoryIds.join(',')});
         `;
       }
 }

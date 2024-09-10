@@ -1,14 +1,7 @@
 import {Entity, model, property} from '@loopback/repository';
 
 @model()
-export class Watch extends Entity {
-  @property({
-    type: 'number',
-    id: true,
-    generated: true,
-  })
-  id?: number;
-
+export class WatchCreation extends Entity {
   @property({
     type: 'string',
     required: true,
@@ -45,7 +38,7 @@ export class Watch extends Entity {
   })
   categories?: number[];
 
-  constructor(data?: Partial<Watch>) {
+  constructor(data?: Partial<WatchCreation>) {
     super(data);
   }
 }

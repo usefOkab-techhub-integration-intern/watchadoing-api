@@ -11,7 +11,9 @@ import {
   patch
 } from '@loopback/rest';
 import { WatchRepository } from '../repositories';
-import { Watch } from '../models/watch.model';
+import { WatchCreation } from '../models/watch.creation.model';
+import { WatchUpdate } from '../models/watch.update.model';
+
 
 export class WatchController {
   constructor(
@@ -22,7 +24,7 @@ export class WatchController {
   @get('/watches/{id}')
   @response(200, {
     description: 'Watch model instance',
-    content: {'application/json': {schema: {'x-ts-type': Watch}}},
+    content: {'application/json': {schema: {'x-ts-type': WatchCreation}}},
   })
   async findById(@param.path.number('id') id: number): Promise<any> {
     return this.watchRepo.findById(id);
@@ -53,13 +55,13 @@ export class WatchController {
   @post('/watches')
   @response(200, {
     description: 'Array of Watch model instances created',
-    content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': Watch } } } },
+    content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': WatchCreation } } } },
   })
   async bulkCreate(
     @requestBody({
-      content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': Watch } } } },
+      content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': WatchCreation } } } },
     })
-    watches: Watch[],
+    watches: WatchCreation[],
   ): Promise<any> {
     return this.watchRepo.bulkCreate(watches);
   }
@@ -69,7 +71,7 @@ export class WatchController {
   description: 'Array of Watch model instances updated',
   content: {
     'application/json': {
-      schema: { type: 'array', items: { 'x-ts-type': Watch } },
+      schema: { type: 'array', items: { 'x-ts-type': WatchUpdate } },
     },
   },
 })
@@ -77,7 +79,7 @@ async bulkUpdate(
   @requestBody({
     content: {
       'application/json': {
-        schema: { type: 'array', items: { 'x-ts-type': Watch } },
+        schema: { type: 'array', items: { 'x-ts-type': WatchUpdate } },
       },
     },
   })
