@@ -11,7 +11,7 @@ import {
   patch
 } from '@loopback/rest';
 import { CategoryRepository } from '../repositories';
-import { Category } from '../models/category.model';
+import { CategoryCreation } from '../models/category.creation.model';
 
 export class CategoryController {
   constructor(
@@ -22,7 +22,7 @@ export class CategoryController {
   @get('/categories/{id}')
   @response(200, {
     description: 'Category model instance',
-    content: {'application/json': {schema: {'x-ts-type': Category}}},
+    content: {'application/json': {schema: {'x-ts-type': CategoryCreation}}},
   })
   async findById(@param.path.number('id') id: number): Promise<any> {
     return this.categoryRepo.findById(id);
@@ -50,13 +50,13 @@ export class CategoryController {
   @post('/categories')
   @response(200, {
     description: 'Array of Category model instances created',
-    content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': Category } } } },
+    content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': CategoryCreation } } } },
   })
   async bulkCreate(
     @requestBody({
-      content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': Category } } } },
+      content: { 'application/json': { schema: { type: 'array', items: { 'x-ts-type': CategoryCreation } } } },
     })
-    categories: Category[],
+    categories: CategoryCreation[],
   ): Promise<any> {
     return this.categoryRepo.bulkCreate(categories);
   }
@@ -66,7 +66,7 @@ export class CategoryController {
   description: 'Array of Category model instances updated',
   content: {
     'application/json': {
-      schema: { type: 'array', items: { 'x-ts-type': Category } },
+      schema: { type: 'array', items: { 'x-ts-type': CategoryCreation } },
     },
   },
 })
@@ -74,7 +74,7 @@ async bulkUpdate(
   @requestBody({
     content: {
       'application/json': {
-        schema: { type: 'array', items: { 'x-ts-type': Category } },
+        schema: { type: 'array', items: { 'x-ts-type': CategoryCreation } },
       },
     },
   })

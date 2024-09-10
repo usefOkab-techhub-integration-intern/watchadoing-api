@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client';
+import { WatchDTO } from '../dto/watch.dto';
+import { CategoryDTO } from '../dto/category.dto';
 
 export class WatchRepository {
   private prisma = new PrismaClient();
+  private categoryDTO = new CategoryDTO();
+  private watchDTO = new WatchDTO(this.categoryDTO);
 
   async findFiltered(filter: any) {
     const whereClause: any = { isDeleted: false };
@@ -40,38 +44,36 @@ export class WatchRepository {
       },
     });
   
-    return watches.map(watch => {
-      const { isDeleted, ...rest } = watch;
-      return {
-        ...rest,
-        categories: watch.categories.map(category => {
-          const { isDeleted, ...categoryRest } = category; 
-          return categoryRest;
-        }),
-      };
-    });
+    return this.watchDTO.mapArray(watches);
   }
 
-  async findDeleted() {
+  async findDeleted(
+      page: number = 1,
+      pageSize: number = 10,
+      sortBy: string = 'createdAt',
+      sortOrder: 'asc' | 'desc' = 'asc'
+  ) {
+    const skips = (page - 1) * pageSize;
+  
     const watches = await this.prisma.watch.findMany({
       where: {
         isDeleted: true,
       },
       include: {
-        categories: true,
+        categories: {
+          where: {
+            isDeleted: false,
+          },
+        },
+      },
+      skip: skips,  
+      take: pageSize,
+      orderBy: {
+        [sortBy]: sortOrder, 
       },
     });
-    
-    return watches.map(watch => {
-      const { isDeleted, ...rest } = watch;
-      return {
-        ...rest,
-        categories: watch.categories.map(category => {
-          const { isDeleted, ...categoryRest } = category; 
-          return categoryRest;
-        }),
-      };
-    });
+  
+    return this.watchDTO.mapArray(watches);
   }
 
   async findById(id: number) {
@@ -84,10 +86,7 @@ export class WatchRepository {
 
     return {
       ...watch,
-      categories: watch?.categories.map(category => {
-        const { isDeleted, ...categoryRest } = category; 
-        return categoryRest;
-      }),
+      categories: this.categoryDTO.mapArray(watch!.categories)
     };
   }
 

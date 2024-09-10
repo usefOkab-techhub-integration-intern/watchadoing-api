@@ -35,7 +35,7 @@ export class WatchController {
     description: 'Array of Watch model instances',
     content: { 'application/json': { schema: { 'x-ts-type': Array } } },
   })
-  async findFiltered(
+  async getFiltered(
     @param.query.object('filter')
     filter?: { model?: string; origin?: string; sn?: string; category?: number },
   ): Promise<any> {
@@ -45,10 +45,22 @@ export class WatchController {
   @get('/watches/deleted')
   @response(200, {
     description: 'Array of Watch model instances',
-    content: {'application/json': {schema: {'x-ts-type': Array}}},
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: { 'x-ts-type': WatchCreation },
+        },
+      },
+    },
   })
-  async getDeleted(): Promise<any> {
-    return this.watchRepo.findDeleted();
+  async getDeleted(
+    @param.query.number('page', { default: 1 }) page: number,
+    @param.query.number('pageSize', { default: 10 }) pageSize: number,
+    @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
+    @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
+  ): Promise<any[]> {
+    return this.watchRepo.findDeleted(page, pageSize, sortBy, sortOrder);
   }
 
 

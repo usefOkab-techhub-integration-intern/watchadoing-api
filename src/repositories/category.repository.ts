@@ -1,9 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { CategoryNativeRepository } from './category.native.repository';
+import { CategoryDTO } from '../dto/category.dto';
 
 export class CategoryRepository {
   private prisma = new PrismaClient();
   private native = new CategoryNativeRepository(this.prisma);
+  private dto = new CategoryDTO();
 
   async findAll() {
     const categories = await this.prisma.category.findMany({
@@ -12,10 +14,7 @@ export class CategoryRepository {
       }
     });
 
-    return categories.map(category => {
-      const { isDeleted, ...categoryRest } = category; 
-      return categoryRest;
-    });
+    return this.dto.mapArray(categories);
   }
 
   async findDeleted() {
@@ -25,10 +24,7 @@ export class CategoryRepository {
       }
     });
 
-    return categories.map(category => {
-      const { isDeleted, ...categoryRest } = category; 
-      return categoryRest;
-    });
+    return this.dto.mapArray(categories);
   }
 
   async findById(id: number) {

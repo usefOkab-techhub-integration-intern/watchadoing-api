@@ -1,7 +1,7 @@
 import {Entity, model, property} from '@loopback/repository';
 
 @model()
-export class Category extends Entity {
+export class CategoryCreation extends Entity {
   @property({
     type: 'string',
     required: true,
@@ -11,7 +11,7 @@ export class Category extends Entity {
   @property({
     type: 'string'
   })
-  description: string;
+  description?: string;
 
   @property({
     type: 'array',
@@ -19,7 +19,7 @@ export class Category extends Entity {
   })
   watches?: number[];
 
-  constructor(data?: Partial<Category>) {
+  constructor(data?: Partial<CategoryCreation>) {
     super(data);
   }
 }
