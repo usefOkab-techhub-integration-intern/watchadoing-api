@@ -10,7 +10,7 @@ export class WatchOrderFilter {
   @property({
     type: 'string'
   })
-  cuustomerName: string;
+  customerName: string;
 
   constructor(data?: Partial<WatchOrderFilter>) {
     Object.assign(this, data);

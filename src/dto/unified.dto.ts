@@ -127,7 +127,7 @@ export class UnifiedDTO {
     return {
       id: shipment.id,
       trackingNum: shipment.trackingNum,
-      addedAt: shipment.createdAt,
+      createdAt: shipment.createdAt,
       updatedAt: shipment.updatedAt,
       order: this.mapWatchOrderNoShipment(shipment.order),
     };
@@ -137,7 +137,7 @@ export class UnifiedDTO {
     return {
       id: shipment.id,
       trackingNum: shipment.trackingNum,
-      addedAt: shipment.createdAt,
+      createdAt: shipment.createdAt,
       updatedAt: shipment.updatedAt,
     };
   }
@@ -151,7 +151,7 @@ export class UnifiedDTO {
     return {
       id: customer.id,
       name: customer.name,
-      addedAt: customer.createdAt,
+      createdAt: customer.createdAt,
       updatedAt: customer.updatedAt,
       orders: this.mapWatchOrderArrayNoCustomer(customer.orders),
     };
@@ -161,7 +161,7 @@ export class UnifiedDTO {
     return {
       id: customer.id,
       name: customer.name,
-      addedAt: customer.createdAt,
+      createdAt: customer.createdAt,
       updatedAt: customer.updatedAt,
     };
   }

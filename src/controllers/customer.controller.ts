@@ -13,6 +13,7 @@ import {
 import { CustomerRepository } from '../repositories';
 import { CustomerCreation, CustomerUpdate } from '../models';
 import { CustomerFilter } from '../models/customer/customer.filter.model';
+import { PageSortParams } from '../models/paging.sorting.model';
   
   export class CustomerController {
     constructor(
@@ -42,14 +43,12 @@ import { CustomerFilter } from '../models/customer/customer.filter.model';
       },
     })
     async getAll(
-      @param.query.number('page', { default: 1 }) page: number,
-      @param.query.number('pageSize', { default: 10 }) pageSize: number,
-      @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
-      @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
+      @param.query.object('pageSortParams')
+      pageSortParams: PageSortParams,
       @param.query.object('filter')
       filter?: CustomerFilter
     ): Promise<any> {
-      return this.customerRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
+      return this.customerRepo.findFiltered(new PageSortParams(pageSortParams), filter);
     }
   
     @get('/customers/deleted')
@@ -65,12 +64,10 @@ import { CustomerFilter } from '../models/customer/customer.filter.model';
       },
     })
     async getDeleted(
-      @param.query.number('page', { default: 1 }) page: number,
-      @param.query.number('pageSize', { default: 10 }) pageSize: number,
-      @param.query.string('sortBy', { default: 'addedAt' }) sortBy: string,
-      @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
+      @param.query.object('pageSortParams')
+      pageSortParams: PageSortParams
     ): Promise<any> {
-      return this.customerRepo.findDeleted(page, pageSize, sortBy, sortOrder);
+      return this.customerRepo.findDeleted(new PageSortParams(pageSortParams));
     }
 
     @post('/customers')

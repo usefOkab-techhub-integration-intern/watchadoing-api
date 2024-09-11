@@ -1,22 +1,22 @@
 import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { NativeQuery } from './native.repository';
+import { PageSortParams } from '../models/paging.sorting.model';
+import { CustomerFilter } from '../models';
 
 export class CustomerRepository {
   private prisma = new PrismaClient();
   private dto = new UnifiedDTO();
 
   async findFiltered(
-    page: number = 1,
-    pageSize: number = 10,
-    sortBy: string = 'createdAt',
-    sortOrder: 'asc' | 'desc' = 'desc',
-    filter: any
+    pageSortParams : PageSortParams,
+    filter? : CustomerFilter
   ) {
-    const whereClause: any = { isDeleted: false };
-    if (filter && filter.name) {
-        whereClause.name = { contains: filter.name };
-    }
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
+    const whereClause: any = {
+      isDeleted: false,
+      ...(filter?.name && { name: { contains: filter.name } }),
+    };
     const customers = await this.prisma.customer.findMany({
       where: whereClause,
       include: {
@@ -45,11 +45,9 @@ export class CustomerRepository {
   }
 
   async findDeleted(
-    page: number = 1,
-    pageSize: number = 10,
-    sortBy: string = 'addedAt',
-    sortOrder: 'asc' | 'desc' = 'desc'
+    pageSortParams : PageSortParams
   ) {
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
     const customers = await this.prisma.customer.findMany({
       where: {
         isDeleted: true,

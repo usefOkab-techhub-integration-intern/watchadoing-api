@@ -12,6 +12,7 @@ import {
 } from '@loopback/rest';
 import { WatchOrderLineRepository } from '../repositories';
 import { WatchOrderLineCreation, WatchOrderLineFilter, WatchOrderLineUpdate } from '../models';
+import { PageSortParams } from '../models/paging.sorting.model';
 
 export class WatchOrderLineController {
   constructor(
@@ -41,13 +42,12 @@ export class WatchOrderLineController {
     },
   })
   async getAll(
-    @param.query.number('page', { default: 1 }) page: number,
-    @param.query.number('pageSize', { default: 10 }) pageSize: number,
-    @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
-    @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
-    @param.query.object('filter') filter?: WatchOrderLineFilter
+    @param.query.object('pageSortParams') 
+    pageSortParams: PageSortParams,
+    @param.query.object('filter') 
+    filter?: WatchOrderLineFilter
   ): Promise<any> {
-    return this.watchOrderLineRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
+    return this.watchOrderLineRepo.findFiltered(new PageSortParams(pageSortParams), filter);
   }
 
   @post('/orderLines')

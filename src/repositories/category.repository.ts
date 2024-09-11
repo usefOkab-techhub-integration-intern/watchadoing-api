@@ -1,17 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { NativeQuery } from './native.repository';
+import { PageSortParams } from '../models/paging.sorting.model';
 
 export class CategoryRepository {
   private prisma = new PrismaClient();
   private dto = new UnifiedDTO();
 
   async findAll(
-    page: number = 1,
-    pageSize: number = 10,
-    sortBy: string = 'createdAt',
-    sortOrder: 'asc' | 'desc' = 'desc'
+    pageSortParams : PageSortParams
   ) {
+    console.log(pageSortParams)
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
     const categories = await this.prisma.category.findMany({
       where: {
         isDeleted: false,
@@ -26,11 +26,9 @@ export class CategoryRepository {
   }
 
   async findDeleted(
-    page: number = 1,
-    pageSize: number = 10,
-    sortBy: string = 'createdAt',
-    sortOrder: 'asc' | 'desc' = 'desc'
+    pageSortParams : PageSortParams
   ) {
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
     const categories = await this.prisma.category.findMany({
       where: {
         isDeleted: true,

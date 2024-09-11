@@ -13,6 +13,7 @@ import {
 import { OrderRepository } from '../repositories';
 import { WatchOrderCreation } from '../models';
 import { WatchOrderFilter } from '../models/order/order.filter.model';
+import { PageSortParams } from '../models/paging.sorting.model';
 
 export class OrderController {
   constructor(
@@ -42,14 +43,12 @@ export class OrderController {
     },
   })
   async getAll(
-    @param.query.number('page', { default: 1 }) page: number,
-    @param.query.number('pageSize', { default: 10 }) pageSize: number,
-    @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
-    @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
+    @param.query.object('pageSortParams')
+    pageSortParams: PageSortParams,
     @param.query.object('filter')
     filter?: WatchOrderFilter,
   ): Promise<any> {
-    return this.orderRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
+    return this.orderRepo.findFiltered(new PageSortParams(pageSortParams), filter);
   }
 
   @post('/orders')

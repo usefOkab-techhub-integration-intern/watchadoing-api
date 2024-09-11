@@ -1,42 +1,32 @@
 import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { NativeQuery } from './native.repository';
+import { PageSortParams } from '../models/paging.sorting.model';
+import { WatchFilter } from '../models';
 
 export class WatchRepository {
   private prisma = new PrismaClient();
   private dto = new UnifiedDTO();
 
   async findFiltered(
-    filter: any,
-    page: number = 1,
-    pageSize: number = 10,
-    sortBy: string = 'createdAt',
-    sortOrder: 'asc' | 'desc' = 'desc'
+    pageSortParams : PageSortParams,
+    filter? : WatchFilter
   ) {
-    const whereClause: any = { isDeleted: false };
-  
-    if (filter) {
-      if (filter.model) {
-        whereClause.model = { contains: filter.model};
-      }
-  
-      if (filter.origin) {
-        whereClause.origin = { contains: filter.origin};
-      }
-  
-      if (filter.sn) {
-        whereClause.sn = { contains: filter.sn};
-      }
-  
-      if (filter.category) {
-        whereClause.categories = { 
-          some: { 
-            id: filter.category, 
-            isDeleted: false 
-          } 
-        };
-      }
-    }
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
+    const whereClause: any = {
+      isDeleted: false,
+      ...(filter?.model && { model: { contains: filter.model } }),
+      ...(filter?.origin && { origin: { contains: filter.origin } }),
+      ...(filter?.sn && { sn: { contains: filter.sn } }),
+      ...(filter?.categories && { 
+        categories: {
+          some: {
+            id: filter.categories,
+            isDeleted: false,
+          }
+        }
+      }),
+    };
   
     const watches = await this.prisma.watch.findMany({
       where: whereClause,
@@ -58,11 +48,9 @@ export class WatchRepository {
   }
 
   async findDeleted(
-      page: number = 1,
-      pageSize: number = 10,
-      sortBy: string = 'createdAt',
-      sortOrder: 'asc' | 'desc' = 'desc'
+    pageSortParams : PageSortParams
   ) {
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
   
     const watches = await this.prisma.watch.findMany({
       where: {

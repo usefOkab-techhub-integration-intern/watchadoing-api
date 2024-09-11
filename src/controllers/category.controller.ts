@@ -13,6 +13,7 @@ import {
 import { CategoryRepository } from '../repositories';
 import { CategoryCreation } from '../models';
 import { CategoryUpdate } from '../models';
+import { PageSortParams } from '../models/paging.sorting.model';
 
 export class CategoryController {
   constructor(
@@ -31,7 +32,7 @@ export class CategoryController {
 
   @get('/categories')
   @response(200, {
-    description: 'Array of Watch model instances',
+    description: 'Array of Category model instances',
     content: {
       'application/json': {
         schema: {
@@ -42,17 +43,15 @@ export class CategoryController {
     },
   })
   async getAll(
-  @param.query.number('page', { default: 1 }) page: number,
-  @param.query.number('pageSize', { default: 10 }) pageSize: number,
-  @param.query.string('sortBy', { default: 'addedAt' }) sortBy: string,
-  @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
+  @param.query.object('pageSortParams')
+  pageSortParams: PageSortParams
   ): Promise<any>  {
-    return this.categoryRepo.findAll(page,pageSize,sortBy,sortOrder);
+    return this.categoryRepo.findAll(new PageSortParams(pageSortParams));
   }
 
   @get('/categories/deleted')
   @response(200, {
-    description: 'Array of Watch model instances',
+    description: 'Array of Category model instances',
     content: {
       'application/json': {
         schema: {
@@ -62,13 +61,12 @@ export class CategoryController {
       },
     },
   })
+
   async getDeleted(
-  @param.query.number('page', { default: 1 }) page: number,
-  @param.query.number('pageSize', { default: 10 }) pageSize: number,
-  @param.query.string('sortBy', { default: 'addedAt' }) sortBy: string,
-  @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
+    @param.query.object('pageSortParams')
+    pageSortParams: PageSortParams
   ): Promise<any> {
-    return this.categoryRepo.findDeleted(page,pageSize,sortBy,sortOrder);
+    return this.categoryRepo.findDeleted(new PageSortParams(pageSortParams));
   }
 
 

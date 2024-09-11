@@ -71,7 +71,7 @@ export interface CategoryI {
   export interface OrderShipmentI {
     id: number;
     trackingNum: number;
-    addedAt: Date;
+    createdAt: Date;
     updatedAt: Date;
     order: WatchOrderNoShipmentI;
   }
@@ -79,14 +79,14 @@ export interface CategoryI {
   export interface OrderShipmentNoOrderI {
     id: number;
     trackingNum: number;
-    addedAt: Date;
+    createdAt: Date;
     updatedAt: Date;
   }
   
   export interface CustomerI {
     id: number;
     name: string;
-    addedAt: Date;
+    createdAt: Date;
     updatedAt: Date;
     orders: WatchOrderNoCustomerI[];
   }
@@ -94,6 +94,6 @@ export interface CategoryI {
   export interface CustomerNoOrderI {
     id: number;
     name: string;
-    addedAt: Date;
+    createdAt: Date;
     updatedAt: Date;
   }

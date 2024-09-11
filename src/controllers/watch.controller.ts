@@ -12,6 +12,7 @@ import {
 } from '@loopback/rest';
 import { WatchCreation, WatchFilter, WatchUpdate } from '../models';
 import { WatchRepository } from '../repositories';
+import { PageSortParams } from '../models/paging.sorting.model';
 
 
 export class WatchController {
@@ -42,14 +43,12 @@ export class WatchController {
     },
   })
   async getFiltered(
-  @param.query.number('page', { default: 1 }) page: number,
-  @param.query.number('pageSize', { default: 10 }) pageSize: number,
-  @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
-  @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
+    @param.query.object('pageSortParams')
+    pageSortParams: PageSortParams,
   @param.query.object('filter')
     filter?: WatchFilter
   ): Promise<any> {
-    return this.watchRepo.findFiltered(filter,page, pageSize, sortBy, sortOrder);
+    return this.watchRepo.findFiltered(new PageSortParams(pageSortParams), filter);
   }
 
   @get('/watches/deleted')
@@ -65,12 +64,10 @@ export class WatchController {
     },
   })
   async getDeleted(
-    @param.query.number('page', { default: 1 }) page: number,
-    @param.query.number('pageSize', { default: 10 }) pageSize: number,
-    @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
-    @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
+    @param.query.object('pageSortParams')
+    pageSortParams: PageSortParams
   ): Promise<any[]> {
-    return this.watchRepo.findDeleted(page, pageSize, sortBy, sortOrder);
+    return this.watchRepo.findDeleted(new PageSortParams(pageSortParams));
   }
 
 

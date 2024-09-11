@@ -1,31 +1,28 @@
 import { PrismaClient } from '@prisma/client';
 import { NativeQuery } from './native.repository';
 import { UnifiedDTO } from '../dto/unified.dto';
+import { PageSortParams } from '../models/paging.sorting.model';
+import { WatchOrderFilter } from '../models';
 
 export class OrderRepository {
   private prisma = new PrismaClient();
   private dto = new UnifiedDTO();
 
   async findFiltered(
-    page: number = 1,
-    pageSize: number = 10,
-    sortBy: string = 'createdAt',
-    sortOrder: 'asc' | 'desc' = 'desc',
-    filter: any
+    pageSortParams : PageSortParams,
+    filter? : WatchOrderFilter
   ) {
-    const whereClause: any = {};
-  
-    if (filter) {
-      if (filter.customerId) {
-        whereClause.customerId = filter.customerId; 
-      } else if (filter.customerName) {
-        whereClause.customer = { 
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
+    const whereClause: any = {
+      ...(filter?.customerId && { customerId: filter.customerId }),
+      ...(filter?.customerName && {
+        customer: {
           name: {
             contains: filter.customerName,
-          }
-        };
-      }
-    }
+          },
+        },
+      }),
+    };
   
     const orders = await this.prisma.watchOrder.findMany({
       where: whereClause,

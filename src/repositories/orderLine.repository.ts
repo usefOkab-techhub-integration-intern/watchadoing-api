@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
+import { PageSortParams } from '../models/paging.sorting.model';
+import { WatchOrderLineFilter } from '../models';
 
 export class WatchOrderLineRepository {
   private prisma = new PrismaClient();
@@ -25,41 +27,28 @@ export class WatchOrderLineRepository {
     return this.dto.mapWatchOrderLine(watchOrderLine);
   }
 
-  // Filter WatchOrderLine entries by various parameters
   async findFiltered(
-    page: number = 1,
-    pageSize: number = 10,
-    sortBy: string = 'createdAt',
-    sortOrder: 'asc' | 'desc' = 'desc',
-    filter: any
+    pageSortParams : PageSortParams,
+    filter? : WatchOrderLineFilter
   ) {
-    const whereClause: any = {};
-
-    if (filter) {
-      if (filter.orderId) {
-        whereClause.orderId = filter.orderId;
-      }
-      if (filter.watchId) {
-        whereClause.watchId = filter.watchId;
-      }
-      if (filter.quantity) {
-        whereClause.quantity = filter.quantity;
-      }
-      if (filter.watchModel) {
-        whereClause.watch = { model: { contains: filter.watchModel } };
-      }
-      if (filter.watchOrigin) {
-        whereClause.watch = { origin: { contains: filter.watchOrigin } };
-      }
-      if (filter.watchSN) {
-        whereClause.watch = { serialNumber: { contains: filter.watchSN } };
-      }
-      if (filter.watchCategoryName) {
-        whereClause.watch = {
-          categories: { some: { name: { contains: filter.watchCategoryName } } },
-        };
-      }
-    }
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams
+    const whereClause: any = {
+      ...(filter?.orderId && { orderId: filter.orderId }),
+      ...(filter?.watchId && { watchId: filter.watchId }),
+      ...(filter?.quantity && { quantity: filter.quantity }),
+      ...(filter?.watchModel && { watch: { model: { contains: filter.watchModel } } }),
+      ...(filter?.watchOrigin && { watch: { origin: { contains: filter.watchOrigin } } }),
+      ...(filter?.watchSN && { watch: { serialNumber: { contains: filter.watchSN } } }),
+      ...(filter?.watchCategoryName && {
+        watch: {
+          categories: {
+            some: {
+              name: { contains: filter.watchCategoryName },
+            },
+          },
+        },
+      }),
+    };
 
     const watchOrderLines = await this.prisma.watchOrderLine.findMany({
       where: whereClause,
