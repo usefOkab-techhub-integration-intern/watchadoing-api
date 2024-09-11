@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
+import { NativeQuery } from './native.repository';
 
 export class WatchRepository {
   private prisma = new PrismaClient();
@@ -117,6 +118,8 @@ async bulkCreate(dataArray: any[]) {
 async bulkUpdate(dataArray: any[]) {
   const results = [];
   for (const data of dataArray) {
+    await this.prisma.$executeRawUnsafe(NativeQuery.disconnectCategoriesFromWatch(data.id));
+    
     const result = await this.prisma.watch.update({
       where: { id: data.id },
       data: {
