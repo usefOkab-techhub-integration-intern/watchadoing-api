@@ -43,7 +43,7 @@ export class CategoryController {
   async getAll(
   @param.query.number('page', { default: 1 }) page: number,
   @param.query.number('pageSize', { default: 10 }) pageSize: number,
-  @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
+  @param.query.string('sortBy', { default: 'addedAt' }) sortBy: string,
   @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
   ): Promise<any>  {
     return this.categoryRepo.findAll(page,pageSize,sortBy,sortOrder);
@@ -64,7 +64,7 @@ export class CategoryController {
   async getDeleted(
   @param.query.number('page', { default: 1 }) page: number,
   @param.query.number('pageSize', { default: 10 }) pageSize: number,
-  @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
+  @param.query.string('sortBy', { default: 'addedAt' }) sortBy: string,
   @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
   ): Promise<any> {
     return this.categoryRepo.findDeleted(page,pageSize,sortBy,sortOrder);

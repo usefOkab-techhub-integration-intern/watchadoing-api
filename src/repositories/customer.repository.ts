@@ -1,16 +1,16 @@
 import { PrismaClient } from '@prisma/client';
-import { CustomerDTO } from '../dto/customer.dto';
 import { CustomerNativeRepository } from './customer.native.repository';
+import { UnifiedDTO } from '../dto/unified.dto';
 
 export class CustomerRepository {
   private prisma = new PrismaClient();
   private native = new CustomerNativeRepository(this.prisma);
-  private dto = new CustomerDTO();
+  private dto = new UnifiedDTO();
 
   async findAll(
     page: number = 1,
     pageSize: number = 10,
-    sortBy: string = 'createdAt',
+    sortBy: string = 'addedAt',
     sortOrder: 'asc' | 'desc' = 'desc'
   ) {
     const customers = await this.prisma.customer.findMany({
@@ -18,7 +18,20 @@ export class CustomerRepository {
         isDeleted: false,
       },
       include: {
-        orders: true,
+        orders: {
+          include: {
+            shipment: true,
+            orderLines: {
+              include: {
+                watch: {
+                  include: {
+                    categories: true
+                  }
+                }
+              }
+            }
+          }
+        },
       },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -26,22 +39,19 @@ export class CustomerRepository {
         [sortBy]: sortOrder,
       },
     });
-    return this.dto.mapArray(customers);
+    return this.dto.mapCustomerArray(customers);
   }
 
   async findDeleted(
     page: number = 1,
     pageSize: number = 10,
-    sortBy: string = 'createdAt',
+    sortBy: string = 'addedAt',
     sortOrder: 'asc' | 'desc' = 'desc'
   ) {
     const customers = await this.prisma.customer.findMany({
       where: {
         isDeleted: true,
       },
-      include: {
-        orders: true, 
-      },
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: {
@@ -49,14 +59,27 @@ export class CustomerRepository {
       },
     });
 
-    return this.dto.mapArray(customers);
+    return this.dto.mapCustomerArray(customers);
   }
 
   async findById(id: number) {
     return this.prisma.customer.findUnique({
       where: { id },
       include: {
-        orders: true, 
+        orders: {
+          include: {
+            shipment: true,
+            orderLines: {
+              include: {
+                watch: {
+                  include: {
+                    categories: true
+                  }
+                }
+              }
+            }
+          }
+        },
       },
     });
   }

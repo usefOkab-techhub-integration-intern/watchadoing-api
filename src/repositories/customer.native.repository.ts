@@ -17,19 +17,9 @@ class CustomerQuery {
   static deleteOrderData(customerIds: number[]): string {
     const customerIdsList = customerIds.join(',');
 
-    return `
-      DELETE FROM WatchOrderLine
-      WHERE orderId IN (
-        SELECT id FROM WatchOrder WHERE customerId IN (${customerIdsList})
-      );
-
-      DELETE FROM OrderShipment
-      WHERE id IN (
-        SELECT shipmentId FROM WatchOrder WHERE customerId IN (${customerIdsList})
-      );
-
-      DELETE FROM WatchOrder
-      WHERE customerId IN (${customerIdsList});
-    `;
+    return `DELETE FROM OrderShipment
+                WHERE id IN (
+                SELECT shipmentId FROM WatchOrder WHERE customerId IN (${customerIdsList})
+            );`;
   }
 }

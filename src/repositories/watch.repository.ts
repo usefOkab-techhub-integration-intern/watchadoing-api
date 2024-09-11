@@ -1,11 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import { WatchDTO } from '../dto/watch.dto';
-import { CategoryDTO } from '../dto/category.dto';
+import { UnifiedDTO } from '../dto/unified.dto';
 
 export class WatchRepository {
   private prisma = new PrismaClient();
-  private categoryDTO = new CategoryDTO();
-  private watchDTO = new WatchDTO();
+  private dto = new UnifiedDTO();
 
   async findFiltered(
     filter: any,
@@ -55,7 +53,7 @@ export class WatchRepository {
       },
     });
   
-    return this.watchDTO.mapArray(watches);
+    return this.dto.mapWatchArray(watches);
   }
 
   async findDeleted(
@@ -83,7 +81,7 @@ export class WatchRepository {
       },
     });
   
-    return this.watchDTO.mapArray(watches);
+    return this.dto.mapWatchArray(watches);
   }
 
   async findById(id: number) {
@@ -96,7 +94,7 @@ export class WatchRepository {
 
     return {
       ...watch,
-      categories: this.categoryDTO.mapArray(watch!.categories)
+      categories: this.dto.mapCategoryArray(watch!.categories)
     };
   }
 

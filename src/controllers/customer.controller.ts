@@ -12,6 +12,7 @@ import {
   } from '@loopback/rest';
 import { CustomerRepository } from '../repositories/customer.repository';
 import { CustomerCreation } from '../models/customer.creation.model';
+import { CustomerUpdate } from '../models/customer.update.model';
   
   export class CustomerController {
     constructor(
@@ -64,7 +65,7 @@ import { CustomerCreation } from '../models/customer.creation.model';
     async getDeleted(
       @param.query.number('page', { default: 1 }) page: number,
       @param.query.number('pageSize', { default: 10 }) pageSize: number,
-      @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
+      @param.query.string('sortBy', { default: 'addedAt' }) sortBy: string,
       @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
     ): Promise<any> {
       return this.customerRepo.findDeleted(page, pageSize, sortBy, sortOrder);
@@ -97,7 +98,7 @@ import { CustomerCreation } from '../models/customer.creation.model';
     description: 'Array of Customer model instances updated',
     content: {
       'application/json': {
-        schema: { type: 'array', items: { 'x-ts-type': CustomerCreation } },
+        schema: { type: 'array', items: { 'x-ts-type': CustomerUpdate } },
       },
     },
   })
@@ -105,7 +106,7 @@ import { CustomerCreation } from '../models/customer.creation.model';
     @requestBody({
       content: {
         'application/json': {
-          schema: { type: 'array', items: { 'x-ts-type': CustomerCreation } },
+          schema: { type: 'array', items: { 'x-ts-type': CustomerUpdate } },
         },
       },
     })

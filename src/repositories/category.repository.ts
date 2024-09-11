@@ -1,11 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { CategoryNativeRepository } from './category.native.repository';
-import { CategoryDTO } from '../dto/category.dto';
+import { UnifiedDTO } from '../dto/unified.dto';
 
 export class CategoryRepository {
   private prisma = new PrismaClient();
   private native = new CategoryNativeRepository(this.prisma);
-  private dto = new CategoryDTO();
+  private dto = new UnifiedDTO();
 
   async findAll(
     page: number = 1,
@@ -23,7 +23,7 @@ export class CategoryRepository {
         [sortBy]: sortOrder, 
       },
     });
-    return this.dto.mapArray(categories);
+    return this.dto.mapCategoryArray(categories);
   }
 
   async findDeleted(
@@ -43,7 +43,7 @@ export class CategoryRepository {
       },
     });
 
-    return this.dto.mapArray(categories);
+    return this.dto.mapCategoryArray(categories);
   }
 
   async findById(id: number) {
