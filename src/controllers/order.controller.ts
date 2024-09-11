@@ -11,7 +11,8 @@ import {
   patch
 } from '@loopback/rest';
 import { OrderRepository } from '../repositories';
-import { OrderCreation } from '../models';
+import { WatchOrderCreation } from '../models';
+import { WatchOrderFilter } from '../models/order/order.filter.model';
 
 export class OrderController {
   constructor(
@@ -22,7 +23,7 @@ export class OrderController {
   @get('/orders/{id}')
   @response(200, {
     description: 'Order model instance',
-    content: {'application/json': {schema: {'x-ts-type': OrderCreation}}},
+    content: {'application/json': {schema: {'x-ts-type': WatchOrderCreation}}},
   })
   async findById(@param.path.number('id') id: number): Promise<any> {
     return this.orderRepo.findById(id);
@@ -35,7 +36,7 @@ export class OrderController {
       'application/json': {
         schema: {
           type: 'array',
-          items: { 'x-ts-type': OrderCreation },
+          items: { 'x-ts-type': WatchOrderCreation },
         },
       },
     },
@@ -46,7 +47,7 @@ export class OrderController {
     @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
     @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
     @param.query.object('filter')
-    filter?: { customerId?: number; customerName?: string; },
+    filter?: WatchOrderFilter,
   ): Promise<any> {
     return this.orderRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
   }
@@ -56,7 +57,7 @@ export class OrderController {
     description: 'Array of Order model instances created',
     content: { 
       'application/json': { 
-        schema: { type: 'array', items: { 'x-ts-type': OrderCreation } } 
+        schema: { type: 'array', items: { 'x-ts-type': WatchOrderCreation } } 
       } 
     },
   })
@@ -64,11 +65,11 @@ export class OrderController {
     @requestBody({
       content: { 
         'application/json': { 
-          schema: { type: 'array', items: { 'x-ts-type': OrderCreation } } 
+          schema: { type: 'array', items: { 'x-ts-type': WatchOrderCreation } } 
         } 
       },
     })
-    orders: OrderCreation[],
+    orders: WatchOrderCreation[],
   ): Promise<any[]> {
     return this.orderRepo.bulkCreate(orders);
   }

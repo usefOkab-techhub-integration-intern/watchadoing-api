@@ -1,14 +1,14 @@
 import { model, property } from '@loopback/repository';
 
 @model()
-export class OrderCreation {
+export class WatchOrderCreation {
   @property({
     type: 'number',
     required: true,
   })
   customerId: number;
 
-  constructor(data?: Partial<OrderCreation>) {
+  constructor(data?: Partial<WatchOrderCreation>) {
     Object.assign(this, data);
   }
 }

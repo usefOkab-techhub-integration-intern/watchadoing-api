@@ -11,7 +11,7 @@ import {
   patch,
 } from '@loopback/rest';
 import { WatchOrderLineRepository } from '../repositories';
-import { WatchOrderLineCreation, WatchOrderLineUpdate } from '../models';
+import { WatchOrderLineCreation, WatchOrderLineFilter, WatchOrderLineUpdate } from '../models';
 
 export class WatchOrderLineController {
   constructor(
@@ -45,15 +45,7 @@ export class WatchOrderLineController {
     @param.query.number('pageSize', { default: 10 }) pageSize: number,
     @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
     @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
-    @param.query.object('filter') filter?: {
-      orderId?: number,
-      watchId?: number,
-      quantity?: number,
-      watchModel?: string,
-      watchOrigin?: string,
-      watchSN?: string,
-      watchCategoryName?: string,
-    },
+    @param.query.object('filter') filter?: WatchOrderLineFilter
   ): Promise<any> {
     return this.watchOrderLineRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
   }

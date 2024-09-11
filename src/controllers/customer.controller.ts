@@ -12,6 +12,7 @@ import {
   } from '@loopback/rest';
 import { CustomerRepository } from '../repositories';
 import { CustomerCreation, CustomerUpdate } from '../models';
+import { CustomerFilter } from '../models/customer/customer.filter.model';
   
   export class CustomerController {
     constructor(
@@ -46,7 +47,7 @@ import { CustomerCreation, CustomerUpdate } from '../models';
       @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
       @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
       @param.query.object('filter')
-      filter?: { name?: string;},
+      filter?: CustomerFilter
     ): Promise<any> {
       return this.customerRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
     }

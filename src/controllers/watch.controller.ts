@@ -10,7 +10,7 @@ import {
   response,
   patch
 } from '@loopback/rest';
-import { WatchCreation, WatchUpdate } from '../models';
+import { WatchCreation, WatchFilter, WatchUpdate } from '../models';
 import { WatchRepository } from '../repositories';
 
 
@@ -47,7 +47,7 @@ export class WatchController {
   @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
   @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
   @param.query.object('filter')
-    filter?: { model?: string; origin?: string; sn?: string; category?: number },
+    filter?: WatchFilter
   ): Promise<any> {
     return this.watchRepo.findFiltered(filter,page, pageSize, sortBy, sortOrder);
   }
