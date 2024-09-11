@@ -4,4 +4,6 @@ export * from './order.repository';
 export * from './watch.repository';
 export * from './native.repository';
 export * from './orderLine.repository';
+export * from './shipment.repository';
+
 
