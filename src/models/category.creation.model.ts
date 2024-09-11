@@ -13,12 +13,6 @@ export class CategoryCreation extends Entity {
   })
   description?: string;
 
-  @property({
-    type: 'array',
-    itemType: 'number',
-  })
-  watches?: number[];
-
   constructor(data?: Partial<CategoryCreation>) {
     super(data);
   }
