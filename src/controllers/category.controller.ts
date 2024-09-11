@@ -12,6 +12,7 @@ import {
 } from '@loopback/rest';
 import { CategoryRepository } from '../repositories';
 import { CategoryCreation } from '../models/category.creation.model';
+import { CategoryUpdate } from '../models/category.update.model';
 
 export class CategoryController {
   constructor(
@@ -98,7 +99,7 @@ async bulkUpdate(
   @requestBody({
     content: {
       'application/json': {
-        schema: { type: 'array', items: { 'x-ts-type': CategoryCreation } },
+        schema: { type: 'array', items: { 'x-ts-type': CategoryUpdate } },
       },
     },
   })
