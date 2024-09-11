@@ -1,10 +1,9 @@
 import { PrismaClient } from '@prisma/client';
-import { CategoryNativeRepository } from './category.native.repository';
 import { UnifiedDTO } from '../dto/unified.dto';
+import { NativeQuery } from './native.repository';
 
 export class CategoryRepository {
   private prisma = new PrismaClient();
-  private native = new CategoryNativeRepository(this.prisma);
   private dto = new UnifiedDTO();
 
   async findAll(
@@ -75,7 +74,7 @@ export class CategoryRepository {
   }
 
   async bulkSoftDelete(ids: number[]) {  
-    await this.native.disconnectCategories(ids);
+    await this.prisma.$executeRawUnsafe(NativeQuery.disconnectWatchesFromCategories(ids));
 
     return this.prisma.category.updateMany({
       where: {
