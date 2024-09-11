@@ -17,3 +17,7 @@ export * from './watch/watch.filter.model';
 export * from './orderLine/orderLine.creation.model';
 export * from './orderLine/orderLine.update.model';
 export * from './orderLine/orderLine.filter.model';
+
+export * from './shipment/shipment.creation.model';
+export * from './shipment/shipment.update.model';
+export * from './shipment/shipment.filter.model';
