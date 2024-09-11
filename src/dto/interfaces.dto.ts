@@ -38,7 +38,7 @@ export interface CategoryI {
   export interface WatchOrderI {
     id: number;
     customer: CustomerNoOrderI;
-    shipment: OrderShipmentNoOrderI;
+    shipment: OrderShipmentNoOrderI | null;
     orderLines: WatchOrderLineNoOrderI[];
     createdAt: Date;
     updatedAt: Date;

@@ -11,7 +11,7 @@ import {
   patch
 } from '@loopback/rest';
 import { OrderRepository } from '../repositories';
-import { OrderCreation, OrderUpdate } from '../models';
+import { OrderCreation } from '../models';
 
 export class OrderController {
   constructor(
@@ -46,7 +46,7 @@ export class OrderController {
     @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
     @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
     @param.query.object('filter')
-    filter?: { orderId?: number; name?: string; },
+    filter?: { customerId?: number; customerName?: string; },
   ): Promise<any> {
     return this.orderRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
   }
@@ -68,31 +68,9 @@ export class OrderController {
         } 
       },
     })
-    orders: { name: string }[],
+    orders: { customerId: number }[],
   ): Promise<any[]> {
     return this.orderRepo.bulkCreate(orders);
-  }
-
-  @patch('/orders')
-  @response(200, {
-    description: 'Array of Order model instances updated',
-    content: {
-      'application/json': {
-        schema: { type: 'array', items: { 'x-ts-type': OrderUpdate } },
-      },
-    },
-  })
-  async bulkUpdate(
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: { type: 'array', items: { 'x-ts-type': OrderUpdate } },
-        },
-      },
-    })
-    orders: { id: number, name: string }[],
-  ): Promise<any[]> {
-    return this.orderRepo.bulkUpdate(orders);
   }
 
   @del('/orders')

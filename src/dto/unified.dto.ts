@@ -47,7 +47,7 @@ export class UnifiedDTO {
     return {
       id: order.id,
       customer: this.mapCustomerNoOrder(order.customer),
-      shipment: this.mapOrderShipmentNoOrder(order.shipment),
+      shipment: order.shipment ? this.mapOrderShipmentNoOrder(order.shipment) : null,
       orderLines: this.mapWatchOrderLineArrayNoOrder(order.orderLines),
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,

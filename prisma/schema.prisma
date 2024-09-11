@@ -50,10 +50,10 @@ model OrderShipment {
 
 model WatchOrder {
   id            Int             @id @default(autoincrement())
-  customer      Customer        @relation(fields: [customerId], references: [id])
+  customer      Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId    Int             
-  shipment      OrderShipment   @relation(fields: [shipmentId], references: [id])
-  shipmentId    Int             @unique
+  shipment      OrderShipment?   @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  shipmentId    Int?             @unique
   orderLines    WatchOrderLine[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @default(now()) @updatedAt
@@ -62,9 +62,9 @@ model WatchOrder {
 model WatchOrderLine {
   id            Int             @id @default(autoincrement())
   quantity      Int             @default(0)
-  watch         Watch           @relation(fields: [watchId], references: [id])
+  watch         Watch           @relation(fields: [watchId], references: [id], onDelete: Cascade)
   watchId       Int       
-  order         WatchOrder      @relation(fields: [orderId], references: [id])
+  order         WatchOrder      @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId       Int
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @default(now()) @updatedAt

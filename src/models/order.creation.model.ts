@@ -3,7 +3,7 @@ import { model, property } from '@loopback/repository';
 @model()
 export class OrderCreation {
   @property({
-    type: 'string',
+    type: 'number',
     required: true,
   })
   customerId: number;

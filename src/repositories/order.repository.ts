@@ -13,16 +13,20 @@ export class OrderRepository {
     sortOrder: 'asc' | 'desc' = 'desc',
     filter: any
   ) {
-    const whereClause: any = { isDeleted: false };
-
+    const whereClause: any = {};
+  
     if (filter) {
-      if (filter.orderId) {
-        whereClause.order.id = filter.orderId;
-      } else if (filter.name) {
-        whereClause.order.name = { contains: filter.orderName };
+      if (filter.customerId) {
+        whereClause.customerId = filter.customerId; 
+      } else if (filter.customerName) {
+        whereClause.customer = { 
+          name: {
+            contains: filter.customerName,
+          }
+        };
       }
     }
-
+  
     const orders = await this.prisma.watchOrder.findMany({
       where: whereClause,
       include: {
@@ -36,7 +40,7 @@ export class OrderRepository {
             }
           }
         },
-        customer: true
+        customer: true 
       },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -44,12 +48,11 @@ export class OrderRepository {
         [sortBy]: sortOrder,
       },
     });
-
+  
     return this.dto.mapWatchOrderArray(orders);
   }
-
   async findById(id: number) {
-    return this.prisma.watchOrder.findUnique({
+    const order = await this.prisma.watchOrder.findUnique({
       where: { id },
       include: {
         shipment: true,
@@ -65,37 +68,29 @@ export class OrderRepository {
         customer: true
       },
     });
+    return this.dto.mapWatchOrder(order);
   }
 
   async bulkCreate(dataArray: any[]) {
     const results = [];
+  
     for (const data of dataArray) {
       const result = await this.prisma.watchOrder.create({
-        data: data,
+        data: {
+          customer: {
+            connect: {
+              id: data.customerId, 
+            },
+          },
+        },
       });
       results.push(result);
     }
-    return results;
-  }
-
-  async bulkUpdate(dataArray: any[]) {
-    const results = [];
-    for (const data of dataArray) {
-      const result = await this.prisma.watchOrder.update({
-        where: { id: data.id },
-        data: data,
-      });
-      results.push(result);
-    }
+  
     return results;
   }
 
   async bulkDelete(ids: number[]) {
-    await this.prisma.$executeRawUnsafe(NativeQuery.disconnectShipmentsFromOrder(ids));
-    return this.prisma.watchOrder.deleteMany({
-      where: {
-        id: { in: ids },
-      },
-    });
+    await this.prisma.$executeRawUnsafe(NativeQuery.deleteOrderData(ids));
   }
 }

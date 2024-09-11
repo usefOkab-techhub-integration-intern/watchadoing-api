@@ -21,24 +21,17 @@ export class NativeQuery {
       WHERE id IN (
         SELECT shipmentId FROM WatchOrder WHERE customerId IN (${customerIdsList})
       );
-
-      DELETE FROM WatchOrderLine
-      WHERE orderId IN (
-        SELECT id FROM WatchOrder WHERE customerId IN (${customerIdsList})
-      );
-
-      DELETE FROM WatchOrder
-      WHERE customerId IN (${customerIdsList});
     `;
   }
 
-  static disconnectShipmentsFromOrder(orderIds: number[]): string {
+  static deleteOrderData(orderIds: number[]): string {
     const orderIdsList = orderIds.join(',');
 
     return `
       DELETE FROM OrderShipment
       WHERE id IN (
         SELECT shipmentId FROM WatchOrder WHERE id IN (${orderIdsList})
-      );`
+      );
+    `;
   }
 }
