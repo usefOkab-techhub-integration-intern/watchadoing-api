@@ -48,7 +48,7 @@ export class OrderController {
     @param.query.object('filter')
     filter?: WatchOrderFilter,
   ): Promise<any> {
-    return this.orderRepo.findFiltered(new PageSortParams(pageSortParams), filter);
+    return this.orderRepo.findFiltered(new PageSortParams(pageSortParams), new WatchOrderFilter(filter));
   }
 
   @post('/orders')

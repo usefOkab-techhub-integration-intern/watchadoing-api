@@ -13,23 +13,8 @@ export class WatchRepository {
     filter? : WatchFilter
   ) {
     const {page, pageSize, sortBy, sortOrder} = pageSortParams
-    const whereClause: any = {
-      isDeleted: false,
-      ...(filter?.model && { model: { contains: filter.model } }),
-      ...(filter?.origin && { origin: { contains: filter.origin } }),
-      ...(filter?.sn && { sn: { contains: filter.sn } }),
-      ...(filter?.categories && { 
-        categories: {
-          some: {
-            id: filter.categories,
-            isDeleted: false,
-          }
-        }
-      }),
-    };
-  
     const watches = await this.prisma.watch.findMany({
-      where: whereClause,
+      where: filter?.build(),
       include: {
         categories: {
           where: {

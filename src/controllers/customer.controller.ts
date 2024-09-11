@@ -48,7 +48,7 @@ import { PageSortParams } from '../models/paging.sorting.model';
       @param.query.object('filter')
       filter?: CustomerFilter
     ): Promise<any> {
-      return this.customerRepo.findFiltered(new PageSortParams(pageSortParams), filter);
+      return this.customerRepo.findFiltered(new PageSortParams(pageSortParams), new CustomerFilter(filter));
     }
   
     @get('/customers/deleted')

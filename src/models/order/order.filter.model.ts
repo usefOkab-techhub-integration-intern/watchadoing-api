@@ -12,6 +12,19 @@ export class WatchOrderFilter {
   })
   customerName: string;
 
+  build() : any {
+    return {
+      ...(this?.customerId && { customerId: this.customerId }),
+      ...(this?.customerName && {
+        customer: {
+          name: {
+            contains: this.customerName,
+          },
+        },
+      }),
+    };
+  }
+
   constructor(data?: Partial<WatchOrderFilter>) {
     Object.assign(this, data);
   }

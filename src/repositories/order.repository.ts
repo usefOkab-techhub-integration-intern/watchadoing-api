@@ -12,20 +12,9 @@ export class OrderRepository {
     pageSortParams : PageSortParams,
     filter? : WatchOrderFilter
   ) {
-    const {page, pageSize, sortBy, sortOrder} = pageSortParams
-    const whereClause: any = {
-      ...(filter?.customerId && { customerId: filter.customerId }),
-      ...(filter?.customerName && {
-        customer: {
-          name: {
-            contains: filter.customerName,
-          },
-        },
-      }),
-    };
-  
+    const {page, pageSize, sortBy, sortOrder} = pageSortParams  
     const orders = await this.prisma.watchOrder.findMany({
-      where: whereClause,
+      where: filter?.build(),
       include: {
         shipment: true,
         orderLines: {

@@ -13,12 +13,8 @@ export class CustomerRepository {
     filter? : CustomerFilter
   ) {
     const {page, pageSize, sortBy, sortOrder} = pageSortParams
-    const whereClause: any = {
-      isDeleted: false,
-      ...(filter?.name && { name: { contains: filter.name } }),
-    };
     const customers = await this.prisma.customer.findMany({
-      where: whereClause,
+      where: filter?.build(),
       include: {
         orders: {
           include: {

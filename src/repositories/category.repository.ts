@@ -10,7 +10,6 @@ export class CategoryRepository {
   async findAll(
     pageSortParams : PageSortParams
   ) {
-    console.log(pageSortParams)
     const {page, pageSize, sortBy, sortOrder} = pageSortParams
     const categories = await this.prisma.category.findMany({
       where: {

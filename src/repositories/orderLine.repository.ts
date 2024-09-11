@@ -32,26 +32,8 @@ export class WatchOrderLineRepository {
     filter? : WatchOrderLineFilter
   ) {
     const {page, pageSize, sortBy, sortOrder} = pageSortParams
-    const whereClause: any = {
-      ...(filter?.orderId && { orderId: filter.orderId }),
-      ...(filter?.watchId && { watchId: filter.watchId }),
-      ...(filter?.quantity && { quantity: filter.quantity }),
-      ...(filter?.watchModel && { watch: { model: { contains: filter.watchModel } } }),
-      ...(filter?.watchOrigin && { watch: { origin: { contains: filter.watchOrigin } } }),
-      ...(filter?.watchSN && { watch: { serialNumber: { contains: filter.watchSN } } }),
-      ...(filter?.watchCategoryName && {
-        watch: {
-          categories: {
-            some: {
-              name: { contains: filter.watchCategoryName },
-            },
-          },
-        },
-      }),
-    };
-
     const watchOrderLines = await this.prisma.watchOrderLine.findMany({
-      where: whereClause,
+      where: filter?.build(),
       include: {
         watch: {
           include: {

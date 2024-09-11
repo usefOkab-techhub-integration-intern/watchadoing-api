@@ -33,7 +33,23 @@ export class WatchFilter extends Entity {
     itemType: 'number',
   })
   categories?: number[];
-
+  
+  build() : any {
+    return {
+      isDeleted: false,
+      ...(this?.model && { model: { contains: this.model } }),
+      ...(this?.origin && { origin: { contains: this.origin } }),
+      ...(this?.sn && { sn: { contains: this.sn } }),
+      ...(this?.categories && { 
+        categories: {
+          some: {
+            id: this.categories,
+            isDeleted: false,
+          }
+        }
+      }),
+    };
+  }
   constructor(data?: Partial<WatchFilter>) {
     super(data);
   }

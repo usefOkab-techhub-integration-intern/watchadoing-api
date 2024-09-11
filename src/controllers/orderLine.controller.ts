@@ -47,7 +47,7 @@ export class WatchOrderLineController {
     @param.query.object('filter') 
     filter?: WatchOrderLineFilter
   ): Promise<any> {
-    return this.watchOrderLineRepo.findFiltered(new PageSortParams(pageSortParams), filter);
+    return this.watchOrderLineRepo.findFiltered(new PageSortParams(pageSortParams), new WatchOrderLineFilter(filter));
   }
 
   @post('/orderLines')

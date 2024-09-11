@@ -48,7 +48,7 @@ export class WatchController {
   @param.query.object('filter')
     filter?: WatchFilter
   ): Promise<any> {
-    return this.watchRepo.findFiltered(new PageSortParams(pageSortParams), filter);
+    return this.watchRepo.findFiltered(new PageSortParams(pageSortParams), new WatchFilter(filter));
   }
 
   @get('/watches/deleted')
