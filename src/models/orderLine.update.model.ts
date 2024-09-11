@@ -4,6 +4,13 @@ import {Entity, model, property} from '@loopback/repository';
 export class WatchOrderLineUpdate extends Entity {
   @property({
     type: 'number',
+    id: true,
+    generated: true,
+  })
+  id: number;
+  
+  @property({
+    type: 'number',
     required: true,
     default: 1
   })

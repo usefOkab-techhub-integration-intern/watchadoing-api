@@ -103,7 +103,7 @@ async bulkUpdate(
       },
     },
   })
-  categories: any[],
+  categories: CategoryUpdate[],
 ): Promise<any[]> {
   return this.categoryRepo.bulkUpdate(categories);
 }

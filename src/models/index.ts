@@ -5,4 +5,6 @@ export * from './customer.update.model';
 export * from './order.creation.model';
 export * from './watch.creation.model';
 export * from './watch.update.model';
+export * from './orderLine.creation.model';
+export * from './orderLine.update.model';
 

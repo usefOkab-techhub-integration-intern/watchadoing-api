@@ -105,7 +105,7 @@ async bulkUpdate(
       },
     },
   })
-  watches: any[],
+  watches: WatchUpdate[],
 ): Promise<any[]> {
   return this.watchRepo.bulkUpdate(watches);
 }

@@ -68,7 +68,7 @@ export class OrderController {
         } 
       },
     })
-    orders: { customerId: number }[],
+    orders: OrderCreation[],
   ): Promise<any[]> {
     return this.orderRepo.bulkCreate(orders);
   }

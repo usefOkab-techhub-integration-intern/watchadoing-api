@@ -89,7 +89,7 @@ import { CustomerCreation, CustomerUpdate } from '../models';
           } 
         },
       })
-      customers: { name: string }[],
+      customers: CustomerCreation[],
     ): Promise<any[]> {
       return this.customerRepo.bulkCreate(customers);
     }
@@ -111,7 +111,7 @@ import { CustomerCreation, CustomerUpdate } from '../models';
         },
       },
     })
-    customers: { id: number, name: string }[],
+    customers: CustomerUpdate[],
   ): Promise<any[]> {
     return this.customerRepo.bulkUpdate(customers);
   }
