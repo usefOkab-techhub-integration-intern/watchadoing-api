@@ -5,7 +5,7 @@ import { CategoryDTO } from '../dto/category.dto';
 export class WatchRepository {
   private prisma = new PrismaClient();
   private categoryDTO = new CategoryDTO();
-  private watchDTO = new WatchDTO(this.categoryDTO);
+  private watchDTO = new WatchDTO();
 
   async findFiltered(
     filter: any,
