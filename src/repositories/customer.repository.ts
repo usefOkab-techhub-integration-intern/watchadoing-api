@@ -1,22 +1,24 @@
 import { PrismaClient } from '@prisma/client';
-import { CustomerNativeRepository } from './customer.native.repository';
 import { UnifiedDTO } from '../dto/unified.dto';
+import { NativeQuery } from './native.repository';
 
 export class CustomerRepository {
   private prisma = new PrismaClient();
-  private native = new CustomerNativeRepository(this.prisma);
   private dto = new UnifiedDTO();
 
-  async findAll(
+  async findFiltered(
     page: number = 1,
     pageSize: number = 10,
-    sortBy: string = 'addedAt',
-    sortOrder: 'asc' | 'desc' = 'desc'
+    sortBy: string = 'createdAt',
+    sortOrder: 'asc' | 'desc' = 'desc',
+    filter: any
   ) {
+    const whereClause: any = { isDeleted: false };
+    if (filter && filter.name) {
+        whereClause.name = { contains: filter.name };
+    }
     const customers = await this.prisma.customer.findMany({
-      where: {
-        isDeleted: false,
-      },
+      where: whereClause,
       include: {
         orders: {
           include: {
@@ -108,7 +110,7 @@ export class CustomerRepository {
   }
 
   async bulkSoftDelete(ids: number[]) {  
-    await this.native.deleteAllOrderData(ids);
+    await this.prisma.$executeRawUnsafe(NativeQuery.disconnectOrderDataFromCustomer(ids));
 
     return this.prisma.customer.updateMany({
       where: {

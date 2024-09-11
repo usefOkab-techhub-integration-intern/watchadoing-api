@@ -45,9 +45,11 @@ import { CustomerUpdate } from '../models/customer.update.model';
       @param.query.number('page', { default: 1 }) page: number,
       @param.query.number('pageSize', { default: 10 }) pageSize: number,
       @param.query.string('sortBy', { default: 'createdAt' }) sortBy: string,
-      @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc'
+      @param.query.string('sortOrder', { default: 'desc' }) sortOrder: 'asc' | 'desc',
+      @param.query.object('filter')
+      filter?: { name?: string;},
     ): Promise<any> {
-      return this.customerRepo.findAll(page, pageSize, sortBy, sortOrder);
+      return this.customerRepo.findFiltered(page, pageSize, sortBy, sortOrder, filter);
     }
   
     @get('/customers/deleted')
