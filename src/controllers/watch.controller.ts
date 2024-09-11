@@ -10,9 +10,8 @@ import {
   response,
   patch
 } from '@loopback/rest';
+import { WatchCreation, WatchUpdate } from '../models';
 import { WatchRepository } from '../repositories';
-import { WatchCreation } from '../models/watch.creation.model';
-import { WatchUpdate } from '../models/watch.update.model';
 
 
 export class WatchController {

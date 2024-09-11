@@ -11,8 +11,8 @@ import {
   patch
 } from '@loopback/rest';
 import { CategoryRepository } from '../repositories';
-import { CategoryCreation } from '../models/category.creation.model';
-import { CategoryUpdate } from '../models/category.update.model';
+import { CategoryCreation } from '../models';
+import { CategoryUpdate } from '../models';
 
 export class CategoryController {
   constructor(

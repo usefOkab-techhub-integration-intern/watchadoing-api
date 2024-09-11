@@ -10,9 +10,8 @@ import {
     response,
     patch
   } from '@loopback/rest';
-import { CustomerRepository } from '../repositories/customer.repository';
-import { CustomerCreation } from '../models/customer.creation.model';
-import { CustomerUpdate } from '../models/customer.update.model';
+import { CustomerRepository } from '../repositories';
+import { CustomerCreation, CustomerUpdate } from '../models';
   
   export class CustomerController {
     constructor(
