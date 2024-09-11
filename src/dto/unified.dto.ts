@@ -127,6 +127,7 @@ export class UnifiedDTO {
     return {
       id: shipment.id,
       trackingNum: shipment.trackingNum,
+      isDone: shipment.isDone,
       createdAt: shipment.createdAt,
       updatedAt: shipment.updatedAt,
       order: this.mapWatchOrderNoShipment(shipment.order),
@@ -137,6 +138,7 @@ export class UnifiedDTO {
     return {
       id: shipment.id,
       trackingNum: shipment.trackingNum,
+      isDone: shipment.isDone,
       createdAt: shipment.createdAt,
       updatedAt: shipment.updatedAt,
     };

@@ -70,7 +70,8 @@ export interface CategoryI {
   
   export interface OrderShipmentI {
     id: number;
-    trackingNum: number;
+    trackingNum: string;
+    isDone: Boolean;
     createdAt: Date;
     updatedAt: Date;
     order: WatchOrderNoShipmentI;
@@ -78,7 +79,8 @@ export interface CategoryI {
   
   export interface OrderShipmentNoOrderI {
     id: number;
-    trackingNum: number;
+    trackingNum: string;
+    isDone: Boolean;
     createdAt: Date;
     updatedAt: Date;
   }

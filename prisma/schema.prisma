@@ -42,7 +42,8 @@ model Customer {
 
 model OrderShipment {
   id            Int             @id @default(autoincrement())
-  trackingNum   Int             
+  trackingNum   String             
+  isDone        Boolean         @default(false)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @default(now()) @updatedAt
   order         WatchOrder?
