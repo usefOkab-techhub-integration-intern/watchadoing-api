@@ -1,7 +1,7 @@
 import {Entity, model, property} from '@loopback/repository';
 
 @model()
-export class WatchOrderShipmentUpdate extends Entity {
+export class OrderShipmentUpdate extends Entity {
   @property({
     type: 'number',
     id: true,
@@ -17,7 +17,7 @@ export class WatchOrderShipmentUpdate extends Entity {
   })
   isDone: boolean;
 
-  constructor(data?: Partial<WatchOrderShipmentUpdate>) {
+  constructor(data?: Partial<OrderShipmentUpdate>) {
     super(data);
   }
 }

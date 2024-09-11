@@ -53,7 +53,7 @@ model WatchOrder {
   id            Int             @id @default(autoincrement())
   customer      Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId    Int             
-  shipment      OrderShipment?   @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  shipment      OrderShipment?   @relation(fields: [shipmentId], references: [id], onDelete: SetNull)
   shipmentId    Int?             @unique
   orderLines    WatchOrderLine[]
   createdAt     DateTime        @default(now())

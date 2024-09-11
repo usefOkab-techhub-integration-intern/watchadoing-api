@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { NativeQuery } from './native.repository';
 import { PageSortParams } from '../models/paging.sorting.model';
-import { WatchFilter } from '../models';
+import { WatchCreation, WatchFilter, WatchUpdate } from '../models';
 
 export class WatchRepository {
   private prisma = new PrismaClient();
@@ -72,14 +72,14 @@ export class WatchRepository {
     };
   }
 
-async bulkCreate(dataArray: any[]) {
+async bulkCreate(dataArray: WatchCreation[]) {
   const results = [];
   for (const data of dataArray) {
     const result = await this.prisma.watch.create({
       data: {
         ...data,
         categories: {
-          connect: data.categories.map((categoryId: number) => ({ id: categoryId })),
+          connect: data.categories?.map((categoryId: number) => ({ id: categoryId })),
         },
       },
     });
@@ -88,7 +88,7 @@ async bulkCreate(dataArray: any[]) {
   return results;
 }
 
-async bulkUpdate(dataArray: any[]) {
+async bulkUpdate(dataArray: WatchUpdate[]) {
   const results = [];
   for (const data of dataArray) {
     await this.prisma.$executeRawUnsafe(NativeQuery.disconnectCategoriesFromWatch(data.id));
@@ -98,7 +98,7 @@ async bulkUpdate(dataArray: any[]) {
       data: {
         ...data,
         categories: {
-          connect: data.categories.map((categoryId: number) => ({
+          connect: data.categories?.map((categoryId: number) => ({
             id: categoryId,
           })),
         },

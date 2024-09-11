@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { NativeQuery } from './native.repository';
 import { PageSortParams } from '../models/paging.sorting.model';
-import { CustomerFilter } from '../models';
+import { CustomerCreation, CustomerFilter, CustomerUpdate } from '../models';
 
 export class CustomerRepository {
   private prisma = new PrismaClient();
@@ -80,7 +80,7 @@ export class CustomerRepository {
     });
   }
 
-  async bulkCreate(dataArray: any[]) {
+  async bulkCreate(dataArray: CustomerCreation[]) {
     const results = [];
     for (const data of dataArray) {
       const result = await this.prisma.customer.create({
@@ -91,7 +91,7 @@ export class CustomerRepository {
     return results;
   }
 
-  async bulkUpdate(dataArray: any[]) {
+  async bulkUpdate(dataArray: CustomerUpdate[]) {
     const results = [];
     for (const data of dataArray) {
       const result = await this.prisma.customer.update({

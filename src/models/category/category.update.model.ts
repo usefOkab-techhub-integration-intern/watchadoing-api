@@ -7,8 +7,8 @@ export class CategoryUpdate extends Entity {
         id: true,
         generated: true,
         required: true
-        })
-        id: number;
+    })
+    id: number;
 
     @property({
         type: 'string',

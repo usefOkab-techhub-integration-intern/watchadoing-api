@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { NativeQuery } from './native.repository';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { PageSortParams } from '../models/paging.sorting.model';
-import { WatchOrderFilter } from '../models';
+import { WatchOrderCreation, WatchOrderFilter } from '../models';
 
 export class OrderRepository {
   private prisma = new PrismaClient();
@@ -57,7 +57,7 @@ export class OrderRepository {
     return this.dto.mapWatchOrder(order);
   }
 
-  async bulkCreate(dataArray: any[]) {
+  async bulkCreate(dataArray: WatchOrderCreation[]) {
     const results = [];
   
     for (const data of dataArray) {

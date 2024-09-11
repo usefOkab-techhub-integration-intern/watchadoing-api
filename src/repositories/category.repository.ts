@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { NativeQuery } from './native.repository';
 import { PageSortParams } from '../models/paging.sorting.model';
+import { CategoryCreation, CategoryUpdate } from '../models';
 
 export class CategoryRepository {
   private prisma = new PrismaClient();
@@ -48,7 +49,7 @@ export class CategoryRepository {
     });
   }
 
-  async bulkCreate(dataArray: any[]) {
+  async bulkCreate(dataArray: CategoryCreation[]) {
     const results = [];
     for (const data of dataArray) {
       const result = await this.prisma.category.create({
@@ -59,10 +60,11 @@ export class CategoryRepository {
     return results;
   }
 
-  async bulkUpdate(dataArray: any[]) {
+  async bulkUpdate(dataArray: CategoryUpdate[]) {
     const results = [];
     for (const data of dataArray) {
-      const result = await this.prisma.category.create({
+      const result = await this.prisma.category.update({
+        where: { id: data.id },
         data: data,
       });
       results.push(result);

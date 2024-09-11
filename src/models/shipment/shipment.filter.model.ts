@@ -1,7 +1,7 @@
 import {model, property} from '@loopback/repository';
 
 @model()
-export class WatchOrderShipmentFilter {
+export class OrderShipmentFilter {
   @property({
     type: 'number',
     required: false,
@@ -41,7 +41,7 @@ export class WatchOrderShipmentFilter {
     };
   }
 
-  constructor(data?: Partial<WatchOrderShipmentFilter>) {
+  constructor(data?: Partial<OrderShipmentFilter>) {
     Object.assign(this, data);
   }
 }

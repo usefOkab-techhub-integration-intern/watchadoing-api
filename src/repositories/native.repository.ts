@@ -21,6 +21,9 @@ export class NativeQuery {
       WHERE id IN (
         SELECT shipmentId FROM WatchOrder WHERE customerId IN (${customerIdsList})
       );
+
+      DELETE FROM WatchOrder
+      WHERE customerId IN (${customerIdsList});
     `;
   }
 
@@ -32,6 +35,9 @@ export class NativeQuery {
       WHERE id IN (
         SELECT shipmentId FROM WatchOrder WHERE id IN (${orderIdsList})
       );
+
+      DELETE FROM WatchOrder
+      WHERE is IN (${orderIdsList});
     `;
   }
 }

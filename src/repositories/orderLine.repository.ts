@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { UnifiedDTO } from '../dto/unified.dto';
 import { PageSortParams } from '../models/paging.sorting.model';
-import { WatchOrderLineFilter } from '../models';
+import { WatchOrderLineCreation, WatchOrderLineFilter, WatchOrderLineUpdate } from '../models';
 
 export class WatchOrderLineRepository {
   private prisma = new PrismaClient();
@@ -57,7 +57,7 @@ export class WatchOrderLineRepository {
     return this.dto.mapWatchOrderLineArray(watchOrderLines);
   }
 
-  async bulkCreate(orderLines: any[]) {
+  async bulkCreate(orderLines: WatchOrderLineCreation[]) {
     const results = [];
 
     for (const line of orderLines) {
@@ -87,7 +87,7 @@ export class WatchOrderLineRepository {
     return results;
   }
 
-  async bulkUpdate(orderLines: { id: number; quantity: number }[]) {
+  async bulkUpdate(orderLines: WatchOrderLineUpdate[]) {
     const results = [];
 
     for (const line of orderLines) {
