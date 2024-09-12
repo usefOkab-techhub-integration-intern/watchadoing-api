@@ -1,20 +1,20 @@
-import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
-import {
-  RestExplorerBindings,
-  RestExplorerComponent,
-} from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
-import {ServiceMixin} from '@loopback/service-proxy';
+import { BootMixin } from '@loopback/boot';
+import { ApplicationConfig } from '@loopback/core';
+import { RestExplorerBindings, RestExplorerComponent } from '@loopback/rest-explorer';
+import { RepositoryMixin } from '@loopback/repository';
+import { RestApplication } from '@loopback/rest';
+import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
-import {MySequence} from './sequence';
-import {JwtMiddlewareProvider} from './middleware/jwt.middleware';
-import {SecuritySchemeObject} from '@loopback/openapi-v3';
+import { MySequence } from './sequence';
+import { SecuritySchemeObject } from '@loopback/openapi-v3';
+import { JwtMiddlewareProvider } from './middleware/jwt.middleware';
+import { errorHandlerMiddleware } from './middleware/errorHandling.middleware';
+import { createRateLimiter } from './middleware/rateLimiting.middleware';
+
+
 require('dotenv').config();
 
-
-export {ApplicationConfig};
+export { ApplicationConfig };
 
 export class WatchaDoingApi extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -26,10 +26,26 @@ export class WatchaDoingApi extends BootMixin(
 
     this.static('/', path.join(__dirname, '../public'));
 
+    this.addSecuritySpec();
+
     this.configure(RestExplorerBindings.COMPONENT).to({
       path: '/explorer',
     });
     this.component(RestExplorerComponent);
+
+    this.bind('authentication.jwt.secret').to(process.env.JWT_SECRET || 'defaultSecret');
+
+    this.middleware(JwtMiddlewareProvider);
+
+    const rateLimiter = createRateLimiter({
+      windowMs: Number(process.env.RL_TIME_UNIT),
+      max: Number(process.env.RL_MAX),
+      message: "Too many requests from this IP. Please try again later.",
+    });
+
+    this.middleware(rateLimiter);
+
+    this.middleware(errorHandlerMiddleware());
 
     this.projectRoot = __dirname;
     this.bootOptions = {
@@ -39,12 +55,6 @@ export class WatchaDoingApi extends BootMixin(
         nested: true,
       },
     };
-
-    this.bind('authentication.jwt.secret').to(process.env.JWT_SECRET || 'defaultSecret');
-
-    this.middleware(JwtMiddlewareProvider);
-
-    this.addSecuritySpec();
   }
 
   addSecuritySpec() {
@@ -56,7 +66,7 @@ export class WatchaDoingApi extends BootMixin(
 
     this.api({
       openapi: '3.0.0',
-      info: {title: 'WatchaDoing API', version: '1.0.0'},
+      info: { title: 'WatchaDoing API', version: '1.0.0' },
       paths: {},
       components: {
         securitySchemes: {

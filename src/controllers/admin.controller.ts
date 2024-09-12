@@ -31,7 +31,7 @@ export class AdminController {
     credentials: { username: string; password: string }
   ): Promise<string> {
     const { username, password } = credentials;
-    return this.adminRepo.login(username, password);
+    return await this.adminRepo.login(username, password);
   }
 
   @post('/admin/create')
@@ -56,6 +56,6 @@ export class AdminController {
     adminData: { username: string; password: string }
   ): Promise<void> {
     const { username, password } = adminData;
-    return this.adminRepo.createAdmin(username, password);
+    return await this.adminRepo.createAdmin(username, password);
   }
 }

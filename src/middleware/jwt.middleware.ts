@@ -1,5 +1,5 @@
-import {Provider, inject, ValueOrPromise} from '@loopback/core';
-import {Middleware, MiddlewareContext, RestMiddlewareGroups} from '@loopback/rest';
+import {Provider, inject} from '@loopback/core';
+import {Middleware, MiddlewareContext} from '@loopback/rest';
 import {Request, Response} from 'express';
 import * as jwt from 'jsonwebtoken';
 require('dotenv').config();
