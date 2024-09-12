@@ -8,8 +8,8 @@ import path from 'path';
 import { MySequence } from './sequence';
 import { SecuritySchemeObject } from '@loopback/openapi-v3';
 import { JwtMiddlewareProvider } from './middleware/jwt.middleware';
-import { errorHandlerMiddleware } from './middleware/errorHandling.middleware';
-import { createRateLimiter } from './middleware/rateLimiting.middleware';
+import { loggerMiddleware } from './middleware/logger.middleware';
+import { createRateLimiter } from './middleware/rateLimiter.middleware';
 
 
 require('dotenv').config();
@@ -45,7 +45,7 @@ export class WatchaDoingApi extends BootMixin(
 
     this.middleware(rateLimiter);
 
-    this.middleware(errorHandlerMiddleware());
+    this.middleware(loggerMiddleware());
 
     this.projectRoot = __dirname;
     this.bootOptions = {
