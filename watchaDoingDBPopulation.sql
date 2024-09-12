@@ -26,22 +26,23 @@ VALUES
   (5, 2),  
   (5, 5);  
 
-INSERT INTO Customer (name) VALUES
-('John Doe'),
-('Jane Smith'),
-('Acme Corporation');
+INSERT INTO Customer (name, isDeleted) VALUES
+('John Doe', FALSE),
+('Jane Smith', FALSE),
+('Alice Johnson', FALSE),
+('Bob Williams', TRUE);
 
 INSERT INTO OrderShipment (trackingNum) VALUES
-(123456),
-(789012),
-(345678);
+('TRK1234567890'),
+('TRK9876543210'),
+('TRK1239874560');
 
 INSERT INTO WatchOrder (customerId, shipmentId) VALUES
-(1, 1), 
-(2, 2), 
-(3, 3); 
+(1, 1),    
+(2, 2),    
+(3, NULL); 
 
 INSERT INTO WatchOrderLine (quantity, watchId, orderId) VALUES
-(1, 1, 1), 
-(2, 2, 2), 
-(5, 3, 3); 
+(2, 1, 1),  
+(1, 2, 1),  
+(3, 3, 2);  
