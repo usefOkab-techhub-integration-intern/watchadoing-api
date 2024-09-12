@@ -29,8 +29,7 @@ export function errorHandlerMiddleware(): Middleware {
         method: req.method,
         url: req.originalUrl,
         status: res.statusCode,
-        message: err.message,
-        stack: err.stack,
+        message: err.message
       });
 
       res.status(err.statusCode || 500).json({

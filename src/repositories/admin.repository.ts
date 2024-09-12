@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import { BadRequestError, NotFoundError, InternalServerError } from '../utils/errors'; // Import custom errors
 
 export class AdminRepository {
   private prisma = new PrismaClient();
@@ -14,13 +15,13 @@ export class AdminRepository {
       });
 
       if (!admin) {
-        throw new Error('Admin not found');
+        throw new NotFoundError('Admin not found');
       }
 
       const isMatch = await bcrypt.compare(password, admin.password);
 
       if (!isMatch) {
-        throw new Error('Invalid credentials');
+        throw new BadRequestError('Invalid credentials');
       }
 
       const token = sign({ id: admin.id, username: admin.username }, this.jwtSecret, {
@@ -28,7 +29,13 @@ export class AdminRepository {
       });
       return token;
     } catch (error) {
-      throw new Error(`Login failed: ${error.message}`);
+      if (error.message == 'Invalid credentials') {
+        throw error;
+      } else if (error.message == 'Admin not found') {
+        throw error;
+      } else {
+        throw new InternalServerError(`Login failed: ${error.message}`);
+      }
     }
   }
 
@@ -43,7 +50,8 @@ export class AdminRepository {
         },
       });
     } catch (error) {
-      throw new Error(`Failed to create admin: ${error.message}`);
+      console.error(`Failed to create admin: ${error.message}`);
+      throw new InternalServerError(`Failed to create admin: ${error.message}`);
     }
   }
 }
